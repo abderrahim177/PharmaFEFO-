@@ -27,7 +27,7 @@
                 <a href="#" class="flex items-center gap-3 px-4 py-2.5 bg-indigo-700 rounded-lg text-white font-medium transition">
                     <i class="fa-solid fa-gears w-5 text-sm"></i> Configuration
                 </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-900 hover:text-white rounded-lg transition text-slate-400">
+                <a href="table_users.php" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-900 hover:text-white rounded-lg transition text-slate-400">
                     <i class="fa-solid fa-users-gear w-5 text-sm"></i> Utilisateurs
                 </a>
                 <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-900 hover:text-white rounded-lg transition text-slate-400">
