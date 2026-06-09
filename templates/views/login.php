@@ -48,13 +48,13 @@
                 <p class="text-xs text-slate-400 mt-1">Connectez-vous pour accéder à votre tableau de bord.</p>
             </div>
 
-            <form class="space-y-4">
+            <form action="login_pro.php" method="post" class="space-y-4">
                 <!-- Identifiant / Email -->
                 <div>
                     <label class="block text-[11px] font-medium text-slate-400 uppercase tracking-wider mb-1.5">Adresse email</label>
                     <div class="relative">
                         <i class="fa-solid fa-envelope absolute left-3 top-3 text-slate-400 text-xs"></i>
-                        <input type="email" placeholder="nom@clinique.ma" class="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-hidden focus:border-teal-500 text-sm bg-slate-50/50 transition">
+                        <input name="email" type="email" placeholder="nom@clinique.ma" class="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-hidden focus:border-teal-500 text-sm bg-slate-50/50 transition">
                     </div>
                 </div>
 
@@ -66,18 +66,18 @@
                     </div>
                     <div class="relative">
                         <i class="fa-solid fa-lock absolute left-3 top-3 text-slate-400 text-xs"></i>
-                        <input type="password" placeholder="••••••••" class="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-hidden focus:border-teal-500 text-sm bg-slate-50/50 transition">
+                        <input name="password" type="password" placeholder="••••••••" class="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-hidden focus:border-teal-500 text-sm bg-slate-50/50 transition">
                     </div>
                 </div>
 
                 <!-- Se souvenir de moi -->
                 <div class="flex items-center">
-                    <input type="checkbox" id="remember" class="w-4 h-4 rounded-sm border-slate-300 text-teal-600 focus:ring-teal-500/30 accent-teal-600">
+                    <input  type="checkbox" id="remember" class="w-4 h-4 rounded-sm border-slate-300 text-teal-600 focus:ring-teal-500/30 accent-teal-600">
                     <label Akses-for="remember" class="ml-2 text-xs text-slate-500 select-none cursor-pointer">Se souvenir de cet appareil</label>
                 </div>
 
                 <!-- Bouton Connexion -->
-                <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 rounded-lg transition text-sm cursor-pointer shadow-xs mt-2">
+                <button name="submit" type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium py-2 rounded-lg transition text-sm cursor-pointer shadow-xs mt-2">
                     Se connecter
                 </button>
             </form>
