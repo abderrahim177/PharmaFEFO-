@@ -48,7 +48,7 @@
                 <p class="text-xs text-slate-400 mt-1">Connectez-vous pour accéder à votre tableau de bord.</p>
             </div>
 
-            <form action="login_pro.php" method="post" class="space-y-4">
+            <form action='../../src/controller/autoController.php' method="post" class="space-y-4">
                 <!-- Identifiant / Email -->
                 <div>
                     <label class="block text-[11px] font-medium text-slate-400 uppercase tracking-wider mb-1.5">Adresse email</label>

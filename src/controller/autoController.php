@@ -3,6 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 require_once __DIR__ . '/../../config/database.php';
+
 try {
     $database = new Database();
     $pdo = $database->getConnection();
@@ -13,6 +14,7 @@ try {
 } catch (Exception $e) {
     echo "error !" . $e->getMessage();
 }
+
 class Login {
     private PDO $pdo;
 
@@ -39,13 +41,28 @@ class Login {
                 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 if ($user && password_verify($password, $user['password'])) {
-                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['user_id']   = $user['id'];
                     $_SESSION['user_name'] = $user['name'];
+                    $_SESSION['role_id']   = $user['role_id']; 
                     
-                    header('Location: dashboard.php'); 
-                    exit();
+                    switch ($user['role_id']) {
+                        case 1: 
+                            header('Location: ../../templates/views/admin/dashboard.php');
+                            break;
+                        case 2: 
+                            header('Location: ../../templates/views/Préparateur/dashboard.php');
+                            break;
+                        case 3: 
+                            header('Location: ../../templates/views/Pharmacien/dashboard.php');
+                            break;
+                        default: 
+                            header('Location: ../../templates/views/page_error.php');
+                            break;
+                    }
+                    exit(); 
+                    
                 } else {
-                    header('Location: login.php?error=invalid_credentials');
+                   header('Location: ../../templates/views/page_error.php');
                     exit();
                 }
 
