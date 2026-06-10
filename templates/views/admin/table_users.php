@@ -1,3 +1,6 @@
+<?php 
+ 
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -185,7 +188,7 @@
                 </button>
             </div>
             <!-- Formulaire -->
-            <form action="add_user.php" method="POST" class="space-y-3">
+            <form action="/Pharmafefo-/src/controller/UserController.php" method="POST" class="space-y-3">
                 <div>
                     <label class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-1">Nom Complet</label>
                     <input type="text" name="name" required placeholder="Ex: Amine Benjelloun" class="w-full px-3 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-xs bg-slate-50/30 transition">
@@ -220,7 +223,7 @@
                     <button type="button" class="btnCloseModal border border-slate-200 text-slate-600 text-[11px] font-medium py-1.5 px-3 rounded-md hover:bg-slate-50 transition cursor-pointer">
                         Annuler
                     </button>
-                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1.5 px-3 rounded-md text-[11px] transition shadow-xs cursor-pointer">
+                    <button name='Enregistrer' type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1.5 px-3 rounded-md text-[11px] transition shadow-xs cursor-pointer">
                         Enregistrer
                     </button>
                 </div>
