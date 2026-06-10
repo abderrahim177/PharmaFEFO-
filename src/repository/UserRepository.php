@@ -30,5 +30,11 @@ class users {
     $stmt = $this->pdo->prepare($query);
     $stmt->execute(); 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getCoutUsers() {
+    $query = 'SELECT COUNT(id_user) FROM users';
+    $stmt = $this->pdo->prepare($query);
+    $stmt->execute();
+    return (int) $stmt->fetchColumn();
 }
 }

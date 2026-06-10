@@ -2,18 +2,11 @@
 // 1. Kan-jibou l-fichiers
 require_once __DIR__ . "/../../../config/database.php"; 
 require_once __DIR__ . "/../../../src/repository/UserRepository.php"; 
-
-// 2. Khassna n-creer l-objet dial Database oula!
 $dbInstance = new Database(); 
-
-// 3. Kan-jibou l-connexion PDO b l-methode dialek getConnection()
 $pdo = $dbInstance->getConnection(); 
-
-// 4. Daba kan-sifto l-$pdo s-hiha l l-Repository dial users
 $repository = new users($pdo); 
-
-// 5. Kan-jibou l-users bla hta error
 $users = $repository->GetAllUsers();
+$coutUsers =$repository->getCoutUsers();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -123,7 +116,7 @@ $users = $repository->GetAllUsers();
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-[11px]"></i>
                         <input type="text" placeholder="Rechercher un membre..." class="w-full pl-8 pr-3 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 focus:bg-white text-xs bg-white transition shadow-2xs">
                     </div>
-                    <span class="text-[11px] text-slate-400 font-medium bg-slate-200/50 px-2 py-0.5 rounded">3 utilisateurs</span>
+                    <span class="text-[11px] text-slate-400 font-medium bg-slate-200/50 px-2 py-0.5 rounded"><?= $coutUsers?> Users</span>
                 </div>
 
                 <!-- TABLEAU -->
