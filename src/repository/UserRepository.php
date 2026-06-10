@@ -25,4 +25,10 @@ class users {
             exit();
         }
     }
+    public function GetAllUsers() {
+    $query = 'SELECT id_user, nom, email, role, status, created_at FROM users';
+    $stmt = $this->pdo->prepare($query);
+    $stmt->execute(); 
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 }

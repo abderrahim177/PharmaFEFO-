@@ -1,5 +1,19 @@
 <?php 
- 
+// 1. Kan-jibou l-fichiers
+require_once __DIR__ . "/../../../config/database.php"; 
+require_once __DIR__ . "/../../../src/repository/UserRepository.php"; 
+
+// 2. Khassna n-creer l-objet dial Database oula!
+$dbInstance = new Database(); 
+
+// 3. Kan-jibou l-connexion PDO b l-methode dialek getConnection()
+$pdo = $dbInstance->getConnection(); 
+
+// 4. Daba kan-sifto l-$pdo s-hiha l l-Repository dial users
+$repository = new users($pdo); 
+
+// 5. Kan-jibou l-users bla hta error
+$users = $repository->GetAllUsers();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -127,21 +141,22 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-50 text-xs text-slate-600">
-                            
+                            <?php if (!empty($users)): ?>
+                            <?php foreach ($users as $user): ?>
                             <!-- Ligne 1 -->
                             <tr class="hover:bg-slate-50/40 transition" data-id="1">
-                                <td class="py-3 px-4 text-center font-mono text-[11px] text-slate-400 target-id">1</td>
-                                <td class="py-3 px-4 font-medium text-slate-800 target-name">Amine Benjelloun</td>
-                                <td class="py-3 px-4 text-slate-500 font-normal target-email">a.benjelloun@clinique.ma</td>
+                                <td class="py-3 px-4 text-center font-mono text-[11px] text-slate-400 target-id"><?php echo htmlspecialchars($user['id_user']); ?></td>
+                                <td class="py-3 px-4 font-medium text-slate-800 target-name"><?php echo htmlspecialchars($user['nom']); ?></td>
+                                <td class="py-3 px-4 text-slate-500 font-normal target-email"><?php echo htmlspecialchars($user['email']); ?></td>
                                 <td class="py-3 px-4">
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] bg-indigo-50 text-indigo-700 font-medium border border-indigo-100/30 target-role" data-role="Administrateur">
-                                        Administrateur
+                                       <?php echo htmlspecialchars($user['role']); ?>
                                     </span>
                                 </td>
-                                <td class="py-3 px-4 text-slate-400 text-[11px]">08/06/2026</td>
+                                <td class="py-3 px-4 text-slate-400 text-[11px]"><?php echo htmlspecialchars($user['created_at']); ?></td>
                                 <td class="py-3 px-4">
                                     <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] bg-emerald-50 text-emerald-700 font-medium border border-emerald-100/20 target-status" data-status="Actif">
-                                        <span class="w-1 h-1 bg-emerald-500 rounded-full"></span> Actif
+                                        <span class="w-1 h-1 bg-emerald-500 rounded-full"></span> <?php echo htmlspecialchars($user['status']); ?>
                                     </span>
                                 </td>
                                 <td class="py-3 px-4 text-right">
@@ -156,7 +171,12 @@
                                     </div>
                                 </td>
                             </tr>
-
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="5" style="text-align: center;">No users found.</td>
+                            </tr>
+                        <?php endif; ?>
                         </tbody>
                     </table>
                 </div>

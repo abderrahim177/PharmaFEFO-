@@ -25,7 +25,7 @@ class AdminController {
         $role = isset($_POST['role']) ? htmlspecialchars(trim($_POST['role'])) : '';
         if(empty($name) || empty($email) || empty($password) || empty($status) || empty($role)){
             $_SESSION['error'] = "Tous les champs sont obligatoires.";
-            self::redirectTo('../../templates/views/admin/table_users.php');
+            self::redirectTo('../../templates/views/admin/table_users.php?error_empty');
         }
         $result = $this->repository->AddUsers($name, $email, $password, $status, $role);
         if($result){
@@ -33,7 +33,7 @@ class AdminController {
         } else {
             $_SESSION['error'] = "Erreur lors de l'ajout !";
         }
-        self::redirectTo('../../templates/views/admin/table_users.php');
+        self::redirectTo('../../templates/views/admin/table_users.php?succ');
     }
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
