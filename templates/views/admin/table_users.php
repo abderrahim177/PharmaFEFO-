@@ -41,7 +41,7 @@
                 </a>
                 <a href="Medication.php" class="flex items-center justify-between px-3 py-2 hover:bg-slate-800/50 hover:text-slate-200 rounded-md text-xs font-normal transition">
                     <div class="flex items-center gap-2.5">
-                        <i class="fa-solid fa-database text-xs opacity-70"></i>  Medication Management 
+                        <i class="fa-solid fa-database text-xs opacity-70"></i> Medication Management 
                     </div>
                     <span class="text-[10px] bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded-full font-medium">Sync</span>
                 </a>
@@ -91,7 +91,8 @@
                     </h2>
                     <p class="text-[11px] text-slate-400 mt-0.5">Administrez les accès, rôles et statuts de sécurité des utilisateurs de la plateforme.</p>
                 </div>
-                <button class="bg-slate-900 hover:bg-slate-800 text-white font-medium py-1.5 px-2.5 rounded-md text-[11px] flex items-center gap-1.5 transition shadow-xs cursor-pointer">
+                <!-- ID de déclenchement JS pour ajouter -->
+                <button id="btnOpenAddModal" class="bg-slate-900 hover:bg-slate-800 text-white font-medium py-1.5 px-2.5 rounded-md text-[11px] flex items-center gap-1.5 transition shadow-xs cursor-pointer">
                     <i class="fa-solid fa-user-plus text-[10px] opacity-80"></i> Ajouter un utilisateur
                 </button>
             </div>
@@ -125,24 +126,25 @@
                         <tbody class="divide-y divide-slate-50 text-xs text-slate-600">
                             
                             <!-- Ligne 1 -->
-                            <tr class="hover:bg-slate-50/40 transition">
-                                <td class="py-3 px-4 text-center font-mono text-[11px] text-slate-400">1</td>
-                                <td class="py-3 px-4 font-medium text-slate-800">Amine Benjelloun</td>
-                                <td class="py-3 px-4 text-slate-500 font-normal">a.benjelloun@clinique.ma</td>
+                            <tr class="hover:bg-slate-50/40 transition" data-id="1">
+                                <td class="py-3 px-4 text-center font-mono text-[11px] text-slate-400 target-id">1</td>
+                                <td class="py-3 px-4 font-medium text-slate-800 target-name">Amine Benjelloun</td>
+                                <td class="py-3 px-4 text-slate-500 font-normal target-email">a.benjelloun@clinique.ma</td>
                                 <td class="py-3 px-4">
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] bg-indigo-50 text-indigo-700 font-medium border border-indigo-100/30">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] bg-indigo-50 text-indigo-700 font-medium border border-indigo-100/30 target-role" data-role="Administrateur">
                                         Administrateur
                                     </span>
                                 </td>
                                 <td class="py-3 px-4 text-slate-400 text-[11px]">08/06/2026</td>
                                 <td class="py-3 px-4">
-                                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] bg-emerald-50 text-emerald-700 font-medium border border-emerald-100/20">
+                                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] bg-emerald-50 text-emerald-700 font-medium border border-emerald-100/20 target-status" data-status="Actif">
                                         <span class="w-1 h-1 bg-emerald-500 rounded-full"></span> Actif
                                     </span>
                                 </td>
                                 <td class="py-3 px-4 text-right">
                                     <div class="flex items-center justify-end gap-1">
-                                        <button title="Modifier" class="p-1 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 rounded transition cursor-pointer">
+                                        <!-- Classe ajoutée pour le trigger JS de modification -->
+                                        <button title="Modifier" class="btnEditUser p-1 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 rounded transition cursor-pointer">
                                             <i class="fa-solid fa-pen-to-square text-[11px]"></i>
                                         </button>
                                         <button title="Supprimer" class="p-1 text-slate-400 hover:text-rose-600 hover:bg-slate-50 rounded transition cursor-pointer">
@@ -170,5 +172,169 @@
         </div>
     </main>
 
+    <!-- ==================== MODAL : AJOUTER UN UTILISATEUR ==================== -->
+    <div id="modalAddUser" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 hidden transition-all">
+        <div class="bg-white rounded-xl border border-slate-100 shadow-xl w-full max-w-md p-5 space-y-4 relative transform scale-95 transition-all">
+            <!-- Header -->
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 class="text-xs font-semibold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-user-plus text-indigo-500"></i> Nouveau Collaborateur
+                </h3>
+                <button class="btnCloseModal text-slate-400 hover:text-slate-600 p-1 rounded-md transition cursor-pointer">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+            <!-- Formulaire -->
+            <form action="add_user.php" method="POST" class="space-y-3">
+                <div>
+                    <label class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-1">Nom Complet</label>
+                    <input type="text" name="name" required placeholder="Ex: Amine Benjelloun" class="w-full px-3 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-xs bg-slate-50/30 transition">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-1">Adresse Email</label>
+                    <input type="email" name="email" required placeholder="nom@clinique.ma" class="w-full px-3 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-xs bg-slate-50/30 transition">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-1">Mot de passe</label>
+                    <input type="password" name="password" required placeholder="••••••••" class="w-full px-3 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-xs bg-slate-50/30 transition">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-1">Rôle</label>
+                        <select name="role" class="w-full px-2.5 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-xs bg-slate-50/30 transition">
+                            <option value="Preparateur">Préparateur</option>
+                            <option value="Pharmacien">Pharmacien</option>
+                            <option value="Administrateur">Administrateur</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-1">Statut</label>
+                        <select name="status" class="w-full px-2.5 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-xs bg-slate-50/30 transition">
+                            <option value="Actif">Actif</option>
+                            <option value="Inactif">Inactif</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- Actions Buttons -->
+                <div class="flex items-center justify-end gap-2 border-t border-slate-100 pt-3 mt-4">
+                    <button type="button" class="btnCloseModal border border-slate-200 text-slate-600 text-[11px] font-medium py-1.5 px-3 rounded-md hover:bg-slate-50 transition cursor-pointer">
+                        Annuler
+                    </button>
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1.5 px-3 rounded-md text-[11px] transition shadow-xs cursor-pointer">
+                        Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL : MODIFIER UN UTILISATEUR ==================== -->
+    <div id="modalEditUser" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 hidden transition-all">
+        <div class="bg-white rounded-xl border border-slate-100 shadow-xl w-full max-w-md p-5 space-y-4 relative transform scale-95 transition-all">
+            <!-- Header -->
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 class="text-xs font-semibold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-pen-to-square text-indigo-500"></i> Modifier le Profil
+                </h3>
+                <button class="btnCloseModal text-slate-400 hover:text-slate-600 p-1 rounded-md transition cursor-pointer">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+            <!-- Formulaire -->
+            <form action="edit_user.php" method="POST" class="space-y-3">
+                <!-- Champ caché pour l'ID -->
+                <input type="hidden" id="edit_user_id" name="id">
+
+                <div>
+                    <label class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-1">Nom Complet</label>
+                    <input type="text" id="edit_name" name="name" required class="w-full px-3 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-xs bg-slate-50/30 transition">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-1">Adresse Email</label>
+                    <input type="email" id="edit_email" name="email" required class="w-full px-3 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-xs bg-slate-50/30 transition">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-1">Nouveau mot de passe <span class="text-slate-400 font-normal lowercase">(optionnel)</span></label>
+                    <input type="password" name="password" placeholder="Laisser vide si inchangé" class="w-full px-3 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-xs bg-slate-50/30 transition">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-1">Rôle</label>
+                        <select id="edit_role" name="role" class="w-full px-2.5 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-xs bg-slate-50/30 transition">
+                            <option value="Préparateur">Préparateur</option>
+                            <option value="Pharmacien">Pharmacien</option>
+                            <option value="Administrateur">Administrateur</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-1">Statut</label>
+                        <select id="edit_status" name="status" class="w-full px-2.5 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-xs bg-slate-50/30 transition">
+                            <option value="Actif">Actif</option>
+                            <option value="Inactif">Inactif</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- Actions Buttons -->
+                <div class="flex items-center justify-end gap-2 border-t border-slate-100 pt-3 mt-4">
+                    <button type="button" class="btnCloseModal border border-slate-200 text-slate-600 text-[11px] font-medium py-1.5 px-3 rounded-md hover:bg-slate-50 transition cursor-pointer">
+                        Annuler
+                    </button>
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1.5 px-3 rounded-md text-[11px] transition shadow-xs cursor-pointer">
+                        Mettre à jour
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== LOGIQUE JAVASCRIPT SIMPLIFIÉE ==================== -->
+    <script>
+        // Sélection des éléments DOM
+        const modalAdd = document.getElementById('modalAddUser');
+        const modalEdit = document.getElementById('modalEditUser');
+        
+        // Ouvrir Modal Ajouter
+        document.getElementById('btnOpenAddModal').addEventListener('click', () => {
+            modalAdd.classList.remove('hidden');
+        });
+
+        // Ouvrir et pré-remplir la Modal Modifier
+        document.querySelectorAll('.btnEditUser').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const row = e.target.closest('tr');
+                
+                // Extraction des données réelles de la ligne du tableau
+                const id = row.querySelector('.target-id').innerText.trim();
+                const name = row.querySelector('.target-name').innerText.trim();
+                const email = row.querySelector('.target-email').innerText.trim();
+                const role = row.querySelector('.target-role').getAttribute('data-role');
+                const status = row.querySelector('.target-status').getAttribute('data-status');
+                
+                // Remplissage automatique des inputs du formulaire de modification
+                document.getElementById('edit_user_id').value = id;
+                document.getElementById('edit_name').value = name;
+                document.getElementById('edit_email').value = email;
+                document.getElementById('edit_role').value = role;
+                document.getElementById('edit_status').value = status;
+                
+                // Affichage de la modal
+                modalEdit.classList.remove('hidden');
+            });
+        });
+
+        // Fermer toutes les Modals actives
+        document.querySelectorAll('.btnCloseModal').forEach(button => {
+            button.addEventListener('click', () => {
+                modalAdd.classList.add('hidden');
+                modalEdit.classList.add('hidden');
+            });
+        });
+
+        // Fermeture automatique en cliquant en dehors du conteneur de la modal
+        window.addEventListener('click', (e) => {
+            if (e.target === modalAdd) modalAdd.classList.add('hidden');
+            if (e.target === modalEdit) modalEdit.classList.add('hidden');
+        });
+    </script>
 </body>
 </html>
