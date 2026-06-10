@@ -1,12 +1,16 @@
 <?php 
-// 1. Kan-jibou l-fichiers
+// 1. Kan-jibou l-fichiers bl-paths l-s-hiha
 require_once __DIR__ . "/../../../config/database.php"; 
 require_once __DIR__ . "/../../../src/repository/UserRepository.php"; 
+
+// 2. Instanciation dial l-BDD u l-Repository
 $dbInstance = new Database(); 
 $pdo = $dbInstance->getConnection(); 
 $repository = new users($pdo); 
+
+// 3. Jbna l-data u l-3adad total dial l-users
 $users = $repository->GetAllUsers();
-$coutUsers =$repository->getCoutUsers();
+$coutUsers = $repository->getCoutUsers();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -14,11 +18,8 @@ $coutUsers =$repository->getCoutUsers();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Utilisateurs - PharmaStock</title>
-    <!-- Tailwind CSS v4 -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -26,10 +27,8 @@ $coutUsers =$repository->getCoutUsers();
 </head>
 <body class="bg-slate-50 text-slate-600 flex h-screen overflow-hidden text-sm">
 
-    <!-- SIDEBAR -->
     <aside class="w-60 bg-slate-900 text-slate-400 flex flex-col justify-between hidden md:flex border-r border-slate-800 shrink-0">
         <div>
-            <!-- Header Sidebar -->
             <div class="flex items-center gap-2.5 px-5 py-4 border-b border-slate-800/60">
                 <div class="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center text-white shadow-xs">
                     <i class="fa-solid fa-prescription-bottle-medical text-xs"></i>
@@ -37,7 +36,6 @@ $coutUsers =$repository->getCoutUsers();
                 <span class="text-sm font-semibold tracking-tight text-white">PharmaStock</span>
             </div>
             
-            <!-- Navigation -->
             <nav class="mt-4 px-3 space-y-0.5">
                 <a href="dashboard.php" class="flex items-center justify-between px-3 py-2 hover:bg-slate-800/50 hover:text-slate-200 rounded-md text-xs font-normal transition">
                     <div class="flex items-center gap-2.5">
@@ -63,9 +61,7 @@ $coutUsers =$repository->getCoutUsers();
             </nav>
         </div>
 
-        <!-- Footer Sidebar + Logout -->
         <div class="border-t border-slate-800/60 p-3 space-y-2">
-            <!-- Profil -->
             <div class="flex items-center gap-2.5 px-2 py-1.5 rounded-lg bg-slate-950/40">
                 <div class="w-7 h-7 rounded-md bg-indigo-600 flex items-center justify-center text-[11px] font-bold text-white shadow-xs">AD</div>
                 <div class="leading-tight">
@@ -73,16 +69,13 @@ $coutUsers =$repository->getCoutUsers();
                     <p class="text-[10px] text-slate-500">Console Root</p>
                 </div>
             </div>
-            <!-- Logout Button -->
             <a href="logout.php" class="flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium text-rose-400/80 hover:text-rose-400 hover:bg-rose-500/5 rounded-md transition w-full">
                 <i class="fa-solid fa-arrow-right-from-bracket text-[11px]"></i> Déconnexion
             </a>
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="flex-1 flex flex-col overflow-y-auto">
-        <!-- TOPBAR -->
         <header class="bg-white border-b border-slate-100 h-14 flex items-center justify-between px-6 shrink-0 shadow-xs">
             <h1 class="text-sm font-semibold text-slate-800">Console d'Administration</h1>
             <div class="flex items-center gap-2 text-[10px] font-medium text-slate-400 uppercase tracking-wider bg-slate-50 px-2.5 py-1 rounded-full border border-slate-100">
@@ -90,10 +83,8 @@ $coutUsers =$repository->getCoutUsers();
             </div>
         </header>
 
-        <!-- CONTAINER / CONTENU DE LA PAGE -->
         <div class="p-6 space-y-5 max-w-6xl w-full mx-auto">
             
-            <!-- EN-TÊTE DU TABLEAU -->
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white p-5 rounded-xl border border-slate-100 shadow-sm">
                 <div>
                     <h2 class="text-xs font-semibold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
@@ -101,25 +92,21 @@ $coutUsers =$repository->getCoutUsers();
                     </h2>
                     <p class="text-[11px] text-slate-400 mt-0.5">Administrez les accès, rôles et statuts de sécurité des utilisateurs de la plateforme.</p>
                 </div>
-                <!-- ID de déclenchement JS pour ajouter -->
                 <button id="btnOpenAddModal" class="bg-slate-900 hover:bg-slate-800 text-white font-medium py-1.5 px-2.5 rounded-md text-[11px] flex items-center gap-1.5 transition shadow-xs cursor-pointer">
                     <i class="fa-solid fa-user-plus text-[10px] opacity-80"></i> Ajouter un utilisateur
                 </button>
             </div>
 
-            <!-- BLOC TABLEAU -->
             <div class="bg-white rounded-xl border border-slate-100 shadow-sm overflow-hidden">
                 
-                <!-- RECHERCHE & INFOS -->
                 <div class="p-3.5 border-b border-slate-100 bg-slate-50/40 flex items-center justify-between gap-4">
                     <div class="relative w-full max-w-xs">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-[11px]"></i>
                         <input type="text" placeholder="Rechercher un membre..." class="w-full pl-8 pr-3 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 focus:bg-white text-xs bg-white transition shadow-2xs">
                     </div>
-                    <span class="text-[11px] text-slate-400 font-medium bg-slate-200/50 px-2 py-0.5 rounded"><?= $coutUsers?> Users</span>
+                    <span class="text-[11px] text-slate-400 font-medium bg-slate-200/50 px-2 py-0.5 rounded"><?= htmlspecialchars($coutUsers) ?> Users</span>
                 </div>
 
-                <!-- TABLEAU -->
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
@@ -135,48 +122,58 @@ $coutUsers =$repository->getCoutUsers();
                         </thead>
                         <tbody class="divide-y divide-slate-50 text-xs text-slate-600">
                             <?php if (!empty($users)): ?>
-                            <?php foreach ($users as $user): ?>
-                            <!-- Ligne 1 -->
-                            <tr class="hover:bg-slate-50/40 transition" data-id="1">
-                                <td class="py-3 px-4 text-center font-mono text-[11px] text-slate-400 target-id"><?php echo htmlspecialchars($user['id_user']); ?></td>
-                                <td class="py-3 px-4 font-medium text-slate-800 target-name"><?php echo htmlspecialchars($user['nom']); ?></td>
-                                <td class="py-3 px-4 text-slate-500 font-normal target-email"><?php echo htmlspecialchars($user['email']); ?></td>
-                                <td class="py-3 px-4">
-                                    <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] bg-indigo-50 text-indigo-700 font-medium border border-indigo-100/30 target-role" data-role="Administrateur">
-                                       <?php echo htmlspecialchars($user['role']); ?>
-                                    </span>
-                                </td>
-                                <td class="py-3 px-4 text-slate-400 text-[11px]"><?php echo htmlspecialchars($user['created_at']); ?></td>
-                                <td class="py-3 px-4">
-                                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] bg-emerald-50 text-emerald-700 font-medium border border-emerald-100/20 target-status" data-status="Actif">
-                                        <span class="w-1 h-1 bg-emerald-500 rounded-full"></span> <?php echo htmlspecialchars($user['status']); ?>
-                                    </span>
-                                </td>
-                                <td class="py-3 px-4 text-right">
-                                    <div class="flex items-center justify-end gap-1">
-                                        <!-- Classe ajoutée pour le trigger JS de modification -->
-                                        <button title="Modifier" class="btnEditUser p-1 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 rounded transition cursor-pointer">
-                                            <i class="fa-solid fa-pen-to-square text-[11px]"></i>
-                                        </button>
-                                        <button title="Supprimer" class="p-1 text-slate-400 hover:text-rose-600 hover:bg-slate-50 rounded transition cursor-pointer">
-                                            <i class="fa-solid fa-trash-can text-[11px]"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="5" style="text-align: center;">No users found.</td>
-                            </tr>
-                        <?php endif; ?>
+                                <?php foreach ($users as $user): ?>
+                                    <?php
+                            $roleClasses = [
+                                'Administrateur' => 'bg-indigo-50 text-indigo-700 border-indigo-100/40',
+                                'Pharmacien'     => 'bg-emerald-50 text-emerald-700 border-emerald-100/40',
+                                'Preparateur'    => 'bg-amber-50 text-amber-700 border-amber-100/40',
+                                'Préparateur'    => 'bg-amber-50 text-amber-700 border-amber-100/40'
+                            ];
+
+                            $currentRole = $user['role'];
+                            $badgeClass = $roleClasses[$currentRole] ?? 'bg-slate-50 text-slate-700 border-slate-100';
+                            ?>
+                                <tr class="hover:bg-slate-50/40 transition">
+                                    <td class="py-3 px-4 text-center font-mono text-[11px] text-slate-400 target-id"><?php echo htmlspecialchars($user['id_user']); ?></td>
+                                    <td class="py-3 px-4 font-medium text-slate-800 target-name"><?php echo htmlspecialchars($user['nom']); ?></td>
+                                    <td class="py-3 px-4 text-slate-500 font-normal target-email"><?php echo htmlspecialchars($user['email']); ?></td>
+                                    <td class="py-3 px-4">
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium border target-role <?= $badgeClass ?>" data-role="<?php echo htmlspecialchars($user['role']); ?>">
+                                        <?php echo htmlspecialchars($user['role']); ?>
+                                        </span>
+                                    </td>
+                                    <td class="py-3 px-4 text-slate-400 text-[11px]"><?php echo htmlspecialchars($user['created_at']); ?></td>
+                                    <td class="py-3 px-4">
+                                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] bg-emerald-50 text-emerald-700 font-medium border border-emerald-100/20 target-status" data-status="<?php echo htmlspecialchars($user['status']); ?>">
+                                            <span class="w-1 h-1 bg-emerald-500 rounded-full"></span> <?php echo htmlspecialchars($user['status']); ?>
+                                        </span>
+                                    </td>
+                                    <td class="py-3 px-4 text-right">
+                                        <div class="flex items-center justify-end gap-1">
+                                            <button title="Modifier" class="btnEditUser p-1 text-slate-400 hover:text-indigo-600 hover:bg-slate-50 rounded transition cursor-pointer">
+                                                <i class="fa-solid fa-pen-to-square text-[11px]"></i>
+                                            </button>
+                                            <button title="Supprimer" class="btnDeleteUser p-1 text-slate-400 hover:text-rose-600 hover:bg-slate-50 rounded transition cursor-pointer" 
+                                                    data-id="<?php echo htmlspecialchars($user['id_user']); ?>" 
+                                                    data-name="<?php echo htmlspecialchars($user['nom']); ?>">
+                                                <i class="fa-solid fa-trash-can text-[11px]"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="7" class="py-6 text-center text-slate-400">Aucun utilisateur trouvé.</td>
+                                </tr>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
 
-                <!-- PAGINATION -->
                 <div class="p-3.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400 bg-slate-50/30">
-                    <span>Affichage de 1 à 3 sur 3 utilisateurs</span>
+                    <span>Affichage de 1 à <?= count($users) ?> sur <?= htmlspecialchars($coutUsers) ?> utilisateurs</span>
                     <div class="flex gap-1">
                         <button class="px-2 py-1 border border-slate-200 rounded-md hover:bg-white text-slate-500 transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed" disabled>Précédent</button>
                         <button class="px-2 py-1 border border-slate-200 rounded-md hover:bg-white text-slate-500 transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed" disabled>Suivant</button>
@@ -188,10 +185,8 @@ $coutUsers =$repository->getCoutUsers();
         </div>
     </main>
 
-    <!-- ==================== MODAL : AJOUTER UN UTILISATEUR ==================== -->
     <div id="modalAddUser" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 hidden transition-all">
         <div class="bg-white rounded-xl border border-slate-100 shadow-xl w-full max-w-md p-5 space-y-4 relative transform scale-95 transition-all">
-            <!-- Header -->
             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                 <h3 class="text-xs font-semibold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
                     <i class="fa-solid fa-user-plus text-indigo-500"></i> Nouveau Collaborateur
@@ -200,7 +195,6 @@ $coutUsers =$repository->getCoutUsers();
                     <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
-            <!-- Formulaire -->
             <form action="/Pharmafefo-/src/controller/UserController.php" method="POST" class="space-y-3">
                 <div>
                     <label class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-1">Nom Complet</label>
@@ -231,7 +225,6 @@ $coutUsers =$repository->getCoutUsers();
                         </select>
                     </div>
                 </div>
-                <!-- Actions Buttons -->
                 <div class="flex items-center justify-end gap-2 border-t border-slate-100 pt-3 mt-4">
                     <button type="button" class="btnCloseModal border border-slate-200 text-slate-600 text-[11px] font-medium py-1.5 px-3 rounded-md hover:bg-slate-50 transition cursor-pointer">
                         Annuler
@@ -244,10 +237,8 @@ $coutUsers =$repository->getCoutUsers();
         </div>
     </div>
 
-    <!-- ==================== MODAL : MODIFIER UN UTILISATEUR ==================== -->
     <div id="modalEditUser" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 hidden transition-all">
         <div class="bg-white rounded-xl border border-slate-100 shadow-xl w-full max-w-md p-5 space-y-4 relative transform scale-95 transition-all">
-            <!-- Header -->
             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                 <h3 class="text-xs font-semibold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
                     <i class="fa-solid fa-pen-to-square text-indigo-500"></i> Modifier le Profil
@@ -256,11 +247,8 @@ $coutUsers =$repository->getCoutUsers();
                     <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
-            <!-- Formulaire -->
             <form action="edit_user.php" method="POST" class="space-y-3">
-                <!-- Champ caché pour l'ID -->
                 <input type="hidden" id="edit_user_id" name="id">
-
                 <div>
                     <label class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-1">Nom Complet</label>
                     <input type="text" id="edit_name" name="name" required class="w-full px-3 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-xs bg-slate-50/30 transition">
@@ -277,7 +265,7 @@ $coutUsers =$repository->getCoutUsers();
                     <div>
                         <label class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-1">Rôle</label>
                         <select id="edit_role" name="role" class="w-full px-2.5 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-xs bg-slate-50/30 transition">
-                            <option value="Préparateur">Préparateur</option>
+                            <option value="Preparateur">Préparateur</option>
                             <option value="Pharmacien">Pharmacien</option>
                             <option value="Administrateur">Administrateur</option>
                         </select>
@@ -290,7 +278,6 @@ $coutUsers =$repository->getCoutUsers();
                         </select>
                     </div>
                 </div>
-                <!-- Actions Buttons -->
                 <div class="flex items-center justify-end gap-2 border-t border-slate-100 pt-3 mt-4">
                     <button type="button" class="btnCloseModal border border-slate-200 text-slate-600 text-[11px] font-medium py-1.5 px-3 rounded-md hover:bg-slate-50 transition cursor-pointer">
                         Annuler
@@ -303,11 +290,37 @@ $coutUsers =$repository->getCoutUsers();
         </div>
     </div>
 
-    <!-- ==================== LOGIQUE JAVASCRIPT SIMPLIFIÉE ==================== -->
+    <div id="modalDeleteUser" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center z-50 hidden transition-all">
+        <div class="bg-white rounded-xl border border-slate-100 shadow-xl w-full max-w-sm p-5 space-y-4 relative transform scale-95 transition-all">
+            <div class="flex items-start gap-3.5">
+                <div class="w-9 h-9 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center shrink-0 border border-rose-100/50">
+                    <i class="fa-solid fa-triangle-exclamation text-sm"></i>
+                </div>
+                <div class="space-y-1">
+                    <h3 class="text-xs font-semibold text-slate-800 uppercase tracking-wider">Supprimer le collaborateur</h3>
+                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                        Êtes-vous sûr de vouloir supprimer <span id="delete_user_name" class="font-semibold text-slate-700"></span> ? Cette action est irréversible et retirera tous ses accès.
+                    </p>
+                </div>
+            </div>
+            <form action="delete_user.php" method="POST">
+                <input type="hidden" id="delete_user_id" name="id">
+                <div class="flex items-center justify-end gap-2 border-t border-slate-100 pt-3 mt-1">
+                    <button type="button" class="btnCloseModal border border-slate-200 text-slate-600 text-[11px] font-medium py-1.5 px-3 rounded-md hover:bg-slate-50 transition cursor-pointer">
+                        Annuler
+                    </button>
+                    <button type="submit" class="bg-rose-600 hover:bg-rose-700 text-white font-medium py-1.5 px-3 rounded-md text-[11px] transition shadow-xs cursor-pointer flex items-center gap-1.5">
+                        <i class="fa-solid fa-trash-can text-[10px] opacity-80"></i> Confirmer la suppression
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // Sélection des éléments DOM
         const modalAdd = document.getElementById('modalAddUser');
         const modalEdit = document.getElementById('modalEditUser');
+        const modalDelete = document.getElementById('modalDeleteUser');
         
         // Ouvrir Modal Ajouter
         document.getElementById('btnOpenAddModal').addEventListener('click', () => {
@@ -319,37 +332,50 @@ $coutUsers =$repository->getCoutUsers();
             button.addEventListener('click', (e) => {
                 const row = e.target.closest('tr');
                 
-                // Extraction des données réelles de la ligne du tableau
                 const id = row.querySelector('.target-id').innerText.trim();
                 const name = row.querySelector('.target-name').innerText.trim();
                 const email = row.querySelector('.target-email').innerText.trim();
                 const role = row.querySelector('.target-role').getAttribute('data-role');
                 const status = row.querySelector('.target-status').getAttribute('data-status');
                 
-                // Remplissage automatique des inputs du formulaire de modification
                 document.getElementById('edit_user_id').value = id;
                 document.getElementById('edit_name').value = name;
                 document.getElementById('edit_email').value = email;
                 document.getElementById('edit_role').value = role;
                 document.getElementById('edit_status').value = status;
                 
-                // Affichage de la modal
                 modalEdit.classList.remove('hidden');
             });
         });
 
-        // Fermer toutes les Modals actives
+        // Ouvrir Modal Delete
+        document.querySelectorAll('.btnDeleteUser').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const btn = e.target.closest('.btnDeleteUser');
+                const id = btn.getAttribute('data-id');
+                const name = btn.getAttribute('data-name');
+                
+                document.getElementById('delete_user_id').value = id;
+                document.getElementById('delete_user_name').innerText = name;
+                
+                modalDelete.classList.remove('hidden');
+            });
+        });
+
+        // Fermer toutes les Modals
         document.querySelectorAll('.btnCloseModal').forEach(button => {
             button.addEventListener('click', () => {
                 modalAdd.classList.add('hidden');
                 modalEdit.classList.add('hidden');
+                modalDelete.classList.add('hidden');
             });
         });
 
-        // Fermeture automatique en cliquant en dehors du conteneur de la modal
+        // Fermeture automatique (Outside click)
         window.addEventListener('click', (e) => {
             if (e.target === modalAdd) modalAdd.classList.add('hidden');
             if (e.target === modalEdit) modalEdit.classList.add('hidden');
+            if (e.target === modalDelete) modalDelete.classList.add('hidden');
         });
     </script>
 </body>
