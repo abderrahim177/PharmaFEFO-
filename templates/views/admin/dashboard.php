@@ -4,138 +4,177 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Admin - PharmaStock</title>
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS v4 -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Inter (Plus moderne et compact que Poppins) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Poppins', sans-serif; font-weight: 400; }
+        body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-700 flex h-screen overflow-hidden">
+<body class="bg-slate-50 text-slate-600 flex h-screen overflow-hidden text-sm">
 
     <!-- SIDEBAR -->
-    <aside class="w-64 bg-slate-950 text-slate-400 flex flex-col justify-between p-4 hidden md:flex">
+    <aside class="w-60 bg-slate-900 text-slate-400 flex flex-col justify-between hidden md:flex border-r border-slate-800">
         <div>
-            <div class="flex items-center gap-3 px-2 py-4 border-b border-slate-900">
-                <i class="fa-solid fa-key text-indigo-400 text-xl"></i>
-                <span class="text-lg font-medium tracking-wide text-white">PharmaStock</span>
+            <!-- Header Sidebar -->
+            <div class="flex items-center gap-2.5 px-5 py-4 border-b border-slate-800/60">
+                <div class="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center text-white shadow-xs">
+                    <i class="fa-solid fa-prescription-bottle-medical text-xs"></i>
+                </div>
+                <span class="text-sm font-semibold tracking-tight text-white">PharmaStock</span>
             </div>
-            <nav class="mt-6 space-y-1">
-                <a href="#" class="flex items-center gap-3 px-4 py-2.5 bg-indigo-700 rounded-lg text-white font-medium transition">
-                    <i class="fa-solid fa-gears w-5 text-sm"></i> Configuration
+            
+            <!-- Navigation -->
+            <nav class="mt-4 px-3 space-y-0.5">
+                <a href="#" class="flex items-center justify-between px-3 py-2 bg-indigo-600/10 text-indigo-400 rounded-md font-medium text-xs transition">
+                    <div class="flex items-center gap-2.5">
+                        <i class="fa-solid fa-gears text-xs"></i> Dashboard
+                    </div>
                 </a>
-                <a href="table_users.php" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-900 hover:text-white rounded-lg transition text-slate-400">
-                    <i class="fa-solid fa-users-gear w-5 text-sm"></i> Utilisateurs
+                <a href="table_users.php" class="flex items-center justify-between px-3 py-2 hover:bg-slate-800/50 hover:text-slate-200 rounded-md text-xs font-normal transition">
+                    <div class="flex items-center gap-2.5">
+                        <i class="fa-solid fa-users-gear text-xs opacity-70"></i> Users
+                    </div>
                 </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-900 hover:text-white rounded-lg transition text-slate-400">
-                    <i class="fa-solid fa-database w-5 text-sm"></i> Base Claude Bernard
+                <a href="Medication.php" class="flex items-center justify-between px-3 py-2 hover:bg-slate-800/50 hover:text-slate-200 rounded-md text-xs font-normal transition">
+                    <div class="flex items-center gap-2.5">
+                        <i class="fa-solid fa-database text-xs opacity-70"></i> Medication Management 
+                    </div>
+                    <span class="text-[10px] bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded-full font-medium">Sync</span>
                 </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-900 hover:text-white rounded-lg transition text-slate-400">
-                    <i class="fa-solid fa-file-invoice-dollar w-5 text-sm"></i> Pertes Financières
+                <a href="#" class="flex items-center justify-between px-3 py-2 hover:bg-slate-800/50 hover:text-slate-200 rounded-md text-xs font-normal transition">
+                    <div class="flex items-center gap-2.5">
+                        <i class="fa-solid fa-file-invoice-dollar text-xs opacity-70"></i> Pertes Financières
+                    </div>
                 </a>
             </nav>
         </div>
-        <div class="border-t border-slate-900 pt-4 flex items-center gap-3 px-2">
-            <div class="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-sm font-medium text-white">AD</div>
-            <div>
-                <p class="text-sm font-medium text-slate-200">Admin Principal</p>
-                <p class="text-xs text-indigo-400">Console Root</p>
+
+        <!-- Footer Sidebar + Logout -->
+        <div class="border-t border-slate-800/60 p-3 space-y-2">
+            <!-- Profil -->
+            <div class="flex items-center gap-2.5 px-2 py-1.5 rounded-lg bg-slate-950/40">
+                <div class="w-7 h-7 rounded-md bg-indigo-600 flex items-center justify-center text-[11px] font-bold text-white shadow-xs">AD</div>
+                <div class="leading-tight">
+                    <p class="text-xs font-medium text-slate-200">Admin Principal</p>
+                    <p class="text-[10px] text-slate-500">Console Root</p>
+                </div>
             </div>
+            <!-- Logout Button -->
+            <a href="logout.php" class="flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium text-rose-400/80 hover:text-rose-400 hover:bg-rose-500/5 rounded-md transition w-full">
+                <i class="fa-solid fa-arrow-right-from-bracket text-[11px]"></i> Déconnexion
+            </a>
         </div>
     </aside>
 
     <!-- MAIN CONTENT -->
     <main class="flex-1 flex flex-col overflow-y-auto">
         <!-- TOPBAR -->
-        <header class="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-6 shrink-0">
-            <h1 class="text-lg font-medium text-slate-800">Console d'Administration</h1>
-            <div class="flex items-center gap-2 text-xs font-medium text-slate-400 uppercase tracking-wider">
-                <span class="h-2 w-2 bg-emerald-500 rounded-full"></span> Claude Bernard connecté
+        <header class="bg-white border-b border-slate-100 h-14 flex items-center justify-between px-6 shrink-0 shadow-xs">
+            <h1 class="text-sm font-semibold text-slate-800">Console d'Administration</h1>
+            <div class="flex items-center gap-2 text-[10px] font-medium text-slate-400 uppercase tracking-wider bg-slate-50 px-2.5 py-1 rounded-full border border-slate-100">
+                <span class="h-1.5 w-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Claude Bernard connecté
             </div>
         </header>
 
         <!-- CONTAINER -->
-        <div class="p-6 space-y-6 max-w-7xl w-full mx-auto">
+        <div class="p-6 space-y-5 max-w-6xl w-full mx-auto">
             
             <!-- RAPPORT FINANCIER MENSUEL DES PERTES -->
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 pb-4 mb-4 gap-4">
+            <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-50 pb-3.5 mb-4 gap-3">
                     <div>
-                        <h3 class="text-base font-medium text-slate-800 flex items-center gap-2">
-                            <i class="fa-solid fa-chart-line text-indigo-600 text-sm"></i> Analyse Financière du Gaspillage
+                        <h3 class="text-xs font-semibold text-slate-800 flex items-center gap-1.5 uppercase tracking-wider">
+                            <i class="fa-solid fa-chart-line text-indigo-500 text-xs"></i> Analyse Financière du Gaspillage
                         </h3>
-                        <p class="text-xs text-slate-400">Lots basculés en statut expiré ce mois-ci.</p>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Synthèse des lots basculés en statut expiré (Mois en cours).</p>
                     </div>
-                    <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1.5 px-3 rounded-lg text-xs flex items-center gap-2 transition cursor-pointer">
-                        <i class="fa-solid fa-file-export text-[10px]"></i> Exporter le Rapport
+                    <button class="bg-slate-900 hover:bg-slate-800 text-white font-medium py-1.5 px-2.5 rounded-md text-[11px] flex items-center gap-1.5 transition shadow-xs cursor-pointer">
+                        <i class="fa-solid fa-file-export text-[10px] opacity-80"></i> Exporter
                     </button>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <div class="bg-slate-50/50 p-4 rounded-lg border border-slate-100">
-                        <span class="text-xs text-slate-400 block uppercase tracking-wider">Valeur Perdue</span>
-                        <span class="text-xl font-semibold text-rose-600 mt-1 block">4 210,50 DH</span>
+                <!-- Cartes Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-slate-50/60 p-3.5 rounded-lg border border-slate-100/80 flex justify-between items-start">
+                        <div>
+                            <span class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Valeur Perdue</span>
+                            <span class="text-lg font-bold text-rose-600 mt-0.5 block tracking-tight">4 210,50 DH</span>
+                        </div>
+                        <span class="text-[10px] bg-rose-50 text-rose-600 font-medium px-1.5 py-0.5 rounded">Ce mois</span>
                     </div>
-                    <div class="bg-slate-50/50 p-4 rounded-lg border border-slate-100">
-                        <span class="text-xs text-slate-400 block uppercase tracking-wider">Boîtes Détruites</span>
-                        <span class="text-xl font-semibold text-slate-800 mt-1 block">142 Unités</span>
+                    <div class="bg-slate-50/60 p-3.5 rounded-lg border border-slate-100/80 flex justify-between items-start">
+                        <div>
+                            <span class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Boîtes Détruites</span>
+                            <span class="text-lg font-bold text-slate-800 mt-0.5 block tracking-tight">142 <span class="text-xs font-normal text-slate-400">Unités</span></span>
+                        </div>
+                        <span class="text-[10px] bg-slate-200/60 text-slate-600 font-medium px-1.5 py-0.5 rounded">Cyclamed</span>
                     </div>
-                    <div class="bg-slate-50/50 p-4 rounded-lg border border-slate-100">
-                        <span class="text-xs text-slate-400 block uppercase tracking-wider">Efficacité FEFO</span>
-                        <span class="text-xl font-semibold text-emerald-600 mt-1 block">96.4 %</span>
+                    <div class="bg-slate-50/60 p-3.5 rounded-lg border border-slate-100/80 flex justify-between items-start">
+                        <div>
+                            <span class="text-[11px] text-slate-400 font-medium uppercase tracking-wider">Efficacité FEFO</span>
+                            <span class="text-lg font-bold text-emerald-600 mt-0.5 block tracking-tight">96.4 %</span>
+                        </div>
+                        <span class="text-[10px] bg-emerald-50 text-emerald-600 font-medium px-1.5 py-0.5 rounded">+1.2%</span>
                     </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- GRID ACCÈS ET CLAUDE BERNARD -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                
                 <!-- ACCÈS ACTEURS -->
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs">
-                    <h3 class="text-base font-medium text-slate-800 mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-user-shield text-slate-500 text-sm"></i> Droits d'Accès Système
-                    </h3>
-                    <div class="space-y-2.5">
-                        <div class="p-2.5 border border-slate-100 rounded-lg flex items-center justify-between bg-slate-50/30">
-                            <div>
-                                <p class="text-xs font-medium text-slate-700">Préparateur / Gestionnaire</p>
-                                <p class="text-[11px] text-slate-400">Réception, Scan Lot, Sorties FEFO</p>
+                <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xs font-semibold text-slate-800 mb-3.5 flex items-center gap-1.5 uppercase tracking-wider">
+                            <i class="fa-solid fa-user-shield text-slate-400 text-xs"></i> Droits d'Accès Système
+                        </h3>
+                        <div class="space-y-2">
+                            <div class="p-2.5 border border-slate-100 rounded-lg flex items-center justify-between bg-slate-50/40">
+                                <div>
+                                    <p class="text-xs font-medium text-slate-700">Préparateur / Gestionnaire</p>
+                                    <p class="text-[11px] text-slate-400">Réception, Scan Lot, Sorties FEFO</p>
+                                </div>
+                                <span class="text-[10px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded font-medium">Lecture/Écriture</span>
                             </div>
-                            <span class="text-[10px] text-teal-700 bg-teal-50 px-2 py-0.5 rounded-sm font-medium">Actif</span>
-                        </div>
-                        <div class="p-2.5 border border-slate-100 rounded-lg flex items-center justify-between bg-slate-50/30">
-                            <div>
-                                <p class="text-xs font-medium text-slate-700">Pharmacien / Biologiste</p>
-                                <p class="text-[11px] text-slate-400">Validation, Retours, Configuration seuils</p>
+                            <div class="p-2.5 border border-slate-100 rounded-lg flex items-center justify-between bg-slate-50/40">
+                                <div>
+                                    <p class="text-xs font-medium text-slate-700">Pharmacien / Biologiste</p>
+                                    <p class="text-[11px] text-slate-400">Validation, Retours, Configuration seuils</p>
+                                </div>
+                                <span class="text-[10px] text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded font-medium">Manager</span>
                             </div>
-                            <span class="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-sm font-medium">Actif</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- INTEGRATION CLAUDE BERNARD -->
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs flex flex-col justify-between">
+                <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between">
                     <div>
-                        <h3 class="text-base font-medium text-slate-800 mb-1 flex items-center gap-2">
-                            <i class="fa-solid fa-cloud-arrow-down text-indigo-600 text-sm"></i> Base Claude Bernard
+                        <h3 class="text-xs font-semibold text-slate-800 mb-1 flex items-center gap-1.5 uppercase tracking-wider">
+                            <i class="fa-solid fa-cloud-arrow-down text-indigo-500 text-xs"></i> Base Claude Bernard
                         </h3>
-                        <p class="text-xs text-slate-400 mb-4">Synchronisation automatique des monographies et interactions.</p>
+                        <p class="text-[11px] text-slate-400 mb-3.5">Synchronisation en arrière-plan des monographies et interactions médicamenteuses.</p>
                         
-                        <div class="bg-indigo-50/50 border border-indigo-100/60 p-3.5 rounded-lg text-xs text-indigo-900">
-                            Synchronisation globale effectuée ce jour à 04:00 AM.
+                        <div class="bg-slate-900 text-slate-300 font-mono text-[10px] p-2.5 rounded-lg border border-slate-800 flex items-center justify-between">
+                            <span>Status: API_SUCCESS_200</span>
+                            <span class="text-slate-500">Aujourd'hui à 04:00 AM</span>
                         </div>
                     </div>
 
                     <div class="flex gap-2 mt-4">
-                        <button class="flex-1 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium py-2 rounded-lg transition cursor-pointer">
+                        <button class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-medium py-1.5 rounded-md transition shadow-xs cursor-pointer">
                             Forcer Sync
                         </button>
-                        <button class="border border-slate-200 text-slate-600 text-xs font-medium py-2 px-3 rounded-lg hover:bg-slate-50 transition cursor-pointer">
+                        <button class="border border-slate-200 text-slate-600 text-[11px] font-medium py-1.5 px-3 rounded-md hover:bg-slate-50 transition cursor-pointer">
                             Logs API
                         </button>
                     </div>
                 </div>
+
             </div>
 
         </div>
