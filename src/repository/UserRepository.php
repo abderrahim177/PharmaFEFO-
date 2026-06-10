@@ -77,4 +77,16 @@ class users {
         exit();
     }
 }
+    public function deleteUser($id) {
+    try {
+        $query = 'DELETE FROM users WHERE id_user = :id';
+        $stmt = $this->pdo->prepare($query);
+            return $stmt->execute([
+            ':id' => $id
+        ]);
+    } catch (PDOException $e) {
+        die('Erreur lors de la suppression : ' . $e->getMessage());
+        exit();
+    }
+}
 }

@@ -303,13 +303,13 @@ $coutUsers = $repository->getCoutUsers();
                     </p>
                 </div>
             </div>
-            <form action="delete_user.php" method="POST">
+            <form action="/Pharmafefo-/src/controller/UserController.php" method="POST">
                 <input type="hidden" id="delete_user_id" name="id">
                 <div class="flex items-center justify-end gap-2 border-t border-slate-100 pt-3 mt-1">
                     <button type="button" class="btnCloseModal border border-slate-200 text-slate-600 text-[11px] font-medium py-1.5 px-3 rounded-md hover:bg-slate-50 transition cursor-pointer">
                         Annuler
                     </button>
-                    <button type="submit" class="bg-rose-600 hover:bg-rose-700 text-white font-medium py-1.5 px-3 rounded-md text-[11px] transition shadow-xs cursor-pointer flex items-center gap-1.5">
+                    <button type="submit" name='deleteUser' class="bg-rose-600 hover:bg-rose-700 text-white font-medium py-1.5 px-3 rounded-md text-[11px] transition shadow-xs cursor-pointer flex items-center gap-1.5">
                         <i class="fa-solid fa-trash-can text-[10px] opacity-80"></i> Confirmer la suppression
                     </button>
                 </div>

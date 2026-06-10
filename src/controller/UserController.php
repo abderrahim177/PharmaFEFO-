@@ -68,6 +68,25 @@ class AdminController {
             $_SESSION['error'] = "Données incomplètes pour la modification.";
             self::redirectTo('../../templates/views/admin/table_users.php?msg=error_data');
         }
+
+    }
+    public function deleteUser(){
+        $id = isset($_POST['id']) ? htmlspecialchars(trim($_POST['id'])) : null;
+
+        if ($id) {
+            $success = $this->repository->deleteUser($id);
+            
+            if ($success) {
+                $_SESSION['success'] = "Utilisateur supprimé avec succès.";
+                self::redirectTo('../../templates/views/admin/table_users.php?msg=delete_success');
+            } else {
+                $_SESSION['error'] = "Erreur lors de la suppression !";
+                self::redirectTo('../../templates/views/admin/table_users.php?msg=delete_error');
+            }
+        } else {
+            $_SESSION['error'] = "ID utilisateur introuvable.";
+            self::redirectTo('../../templates/views/admin/table_users.php?msg=error_id');
+        }
     }
 }
 
@@ -79,5 +98,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } 
     elseif (isset($_POST['Modifier'])) {
         $controller->updateUser();
+    }
+    elseif (isset($_POST['deleteUser'])) {
+        $controller->deleteUser();
     }
 }
