@@ -247,15 +247,15 @@ $coutUsers = $repository->getCoutUsers();
                     <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
-            <form action="edit_user.php" method="POST" class="space-y-3">
+            <form action="/Pharmafefo-/src/controller/UserController.php" method="POST" class="space-y-3">
                 <input type="hidden" id="edit_user_id" name="id">
                 <div>
                     <label class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-1">Nom Complet</label>
-                    <input type="text" id="edit_name" name="name" required class="w-full px-3 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-xs bg-slate-50/30 transition">
+                    <input type="text" id="edit_name" name="name_update" required class="w-full px-3 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-xs bg-slate-50/30 transition">
                 </div>
                 <div>
                     <label class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-1">Adresse Email</label>
-                    <input type="email" id="edit_email" name="email" required class="w-full px-3 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-xs bg-slate-50/30 transition">
+                    <input type="email" id="edit_email" name="email_update" required class="w-full px-3 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-xs bg-slate-50/30 transition">
                 </div>
                 <div>
                     <label class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-1">Nouveau mot de passe <span class="text-slate-400 font-normal lowercase">(optionnel)</span></label>
@@ -264,7 +264,7 @@ $coutUsers = $repository->getCoutUsers();
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-1">Rôle</label>
-                        <select id="edit_role" name="role" class="w-full px-2.5 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-xs bg-slate-50/30 transition">
+                        <select id="edit_role" name="role_update" class="w-full px-2.5 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-xs bg-slate-50/30 transition">
                             <option value="Preparateur">Préparateur</option>
                             <option value="Pharmacien">Pharmacien</option>
                             <option value="Administrateur">Administrateur</option>
@@ -272,7 +272,7 @@ $coutUsers = $repository->getCoutUsers();
                     </div>
                     <div>
                         <label class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-1">Statut</label>
-                        <select id="edit_status" name="status" class="w-full px-2.5 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-xs bg-slate-50/30 transition">
+                        <select id="edit_status" name="status_update" class="w-full px-2.5 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-xs bg-slate-50/30 transition">
                             <option value="Actif">Actif</option>
                             <option value="Inactif">Inactif</option>
                         </select>
@@ -282,7 +282,7 @@ $coutUsers = $repository->getCoutUsers();
                     <button type="button" class="btnCloseModal border border-slate-200 text-slate-600 text-[11px] font-medium py-1.5 px-3 rounded-md hover:bg-slate-50 transition cursor-pointer">
                         Annuler
                     </button>
-                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1.5 px-3 rounded-md text-[11px] transition shadow-xs cursor-pointer">
+                    <button type="submit" name="Modifier" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1.5 px-3 rounded-md text-[11px] transition shadow-xs cursor-pointer">
                         Mettre à jour
                     </button>
                 </div>
