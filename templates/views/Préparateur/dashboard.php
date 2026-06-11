@@ -65,7 +65,7 @@ $product_results = isset($_SESSION['fefo_results']) ? $_SESSION['fefo_results'] 
                     <p class="text-[10px] text-teal-500 font-medium leading-none mt-0.5">Préparateur</p>
                 </div>
             </div>
-            <a href="#" class="flex items-center justify-between px-2.5 py-1.5 text-rose-400/90 hover:text-rose-100 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/10 rounded-md transition duration-200 group font-medium text-[11px]">
+            <a href="../logout.php" class="flex items-center justify-between px-2.5 py-1.5 text-rose-400/90 hover:text-rose-100 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/10 rounded-md transition duration-200 group font-medium text-[11px]">
                 <div class="flex items-center gap-2.5">
                     <i class="fa-solid fa-right-from-bracket w-4 text-center text-rose-400/60 group-hover:text-rose-400 transition"></i>
                     <span class="tracking-wide">Déconnexion</span>
