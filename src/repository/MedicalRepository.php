@@ -65,4 +65,28 @@ class ProductRepository{
         return [];
     }
 }
+public function searchAllFefoLots($searchTerm) {
+    try {
+        $query = 'SELECT 
+                    p.name AS product_name, 
+                    l.lot_number, 
+                    l.expiration_date, 
+                    l.quantity,
+                    p.Emplacement 
+                  FROM products p
+                  INNER JOIN lots l ON p.id = l.product_id
+                  WHERE p.name LIKE :search 
+                    AND l.expiration_date >= CURDATE() 
+                    AND l.quantity > 0                 
+                  ORDER BY l.expiration_date ASC
+                  LIMIT 1'; 
+
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([':search' => '%' . $searchTerm . '%']);
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC); 
+    } catch (PDOException $e) {
+        return false;
+    }
+}
 }
