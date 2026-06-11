@@ -22,8 +22,8 @@ class Medicale_Controller {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             self::redirectTo('../../templates/views/Préparateur/dashboard.php?error=invalid_method');
         }
-
         $product_name    = isset($_POST['pruduct_name']) ? htmlspecialchars(trim($_POST['pruduct_name'])) : '';
+        $Emplacement    = isset($_POST['Emplacement']) ? htmlspecialchars(trim($_POST['Emplacement'])) : '';
         $product_lot     = isset($_POST['product_lot']) ? htmlspecialchars(trim($_POST['product_lot'])) : '';
         $date_expiration = isset($_POST['date_expiration']) ? htmlspecialchars(trim($_POST['date_expiration'])) : '';
         $quantity        = isset($_POST['stok']) ? intval($_POST['stok']) : 0;
@@ -40,7 +40,7 @@ class Medicale_Controller {
             self::redirectTo('../../templates/views/Préparateur/dashboard.php?error_date');
         }
 
-        $isSaved = $this->repository->insertProduct($product_name, $product_lot, $date_expiration, $quantity);
+        $isSaved = $this->repository->insertProduct($product_name, $product_lot, $date_expiration, $quantity, $Emplacement);
 
         if ($isSaved) {
             $_SESSION['success_message'] = "Product successfully accepted and queued into the FEFO system!";

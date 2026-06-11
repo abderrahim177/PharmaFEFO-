@@ -1,6 +1,16 @@
+<?php 
+require_once __DIR__ . "/../../../config/database.php"; 
+require_once __DIR__ . "/../../../src/repository/MedicalRepository.php"; 
+
+// 2. Instanciation dial l-BDD u l-Repository
+$dbInstance = new Database(); 
+$pdo = $dbInstance->getConnection(); 
+$repository = new ProductRepository($pdo); 
+
+$Allusers = $repository->GetAllProducts();
+?>
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -140,6 +150,10 @@
                             <input type="text" name="product_lot" required placeholder="Ex: LOT-2026-X9" class="w-full px-2.5 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-teal-500 text-[11px] bg-slate-50/40 transition">
                         </div>
                         <div>
+                            <label class="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Emplacement</label>
+                            <input type="text" name="Emplacement" required placeholder="Ex: Tiroir B-12" class="w-full px-2.5 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-teal-500 text-[11px] bg-slate-50/40 transition">
+                        </div>
+                        <div>
                             <label class="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Date Limite d'Utilisation (DLU)</label>
                             <!-- Min date programmé en JS pour bloquer le passé -->
                             <input type="date" name="date_expiration" id="dlu_input" required class="w-full px-2.5 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-teal-500 text-[11px] bg-slate-50/40 transition">
@@ -218,30 +232,56 @@
                         </thead>
                         <tbody class="divide-y divide-slate-50 text-[11px]">
                             <!-- Lot très critique -->
-                            <tr class="hover:bg-slate-50/80 transition">
-                                <td class="p-2 font-medium text-slate-800">Doliprane 1000mg Tab</td>
-                                <td class="p-2 text-slate-500 font-mono">DL-9942</td>
-                                <td class="p-2"><span class="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded-sm font-medium">Tiroir B-12</span></td>
-                                <td class="p-2 text-rose-600 font-medium">30/07/2026</td>
-                                <td class="p-2"><span class="bg-rose-50 text-rose-700 border border-rose-100 px-2 py-0.5 rounded-sm font-bold text-[9px] uppercase">Priorité 1 (Urgent)</span></td>
-                            </tr>
-                            <!-- Lot moyen -->
-                            <tr class="hover:bg-slate-50/80 transition">
-                                <td class="p-2 font-medium text-slate-800">Augmentin 500mg</td>
-                                <td class="p-2 text-slate-500 font-mono">AUG-2026-A1</td>
-                                <td class="p-2"><span class="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded-sm font-medium">Frigo A-2</span></td>
-                                <td class="p-2 text-amber-600 font-medium">14/10/2026</td>
-                                <td class="p-2"><span class="bg-amber-50 text-amber-700 border border-amber-100 px-2 py-0.5 rounded-sm font-bold text-[9px] uppercase">Priorité 2</span></td>
-                            </tr>
-                            <!-- Lot éloigné -->
-                            <tr class="hover:bg-slate-50/80 transition">
-                                <td class="p-2 font-medium text-slate-800">Spasfon Inj</td>
-                                <td class="p-2 text-slate-500 font-mono">SPF-8821</td>
-                                <td class="p-2"><span class="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded-sm font-medium">Rayon C-4</span></td>
-                                <td class="p-2 text-emerald-600 font-medium">22/12/2027</td>
-                                <td class="p-2"><span class="bg-emerald-50 text-emerald-700 border border-emerald-100 px-2 py-0.5 rounded-sm font-bold text-[9px] uppercase">En Attente</span></td>
-                            </tr>
-                        </tbody>
+                             <tbody class="divide-y divide-slate-50 text-[11px]">
+    <?php if (!empty($Allusers)): ?>
+        <?php foreach ($Allusers as $user): 
+            $today_date = new DateTime();
+            $expire_date = new DateTime($user['expiration_date']);
+            $interval = $today_date->diff($expire_date);
+            $days_left = $interval->format('%r%a'); 
+            if ($days_left <= 30) {
+                $status_text = "Priorité 1 (Urgent)";
+                $badge_class = "bg-rose-50 text-rose-700 border border-rose-100";
+                $date_class = "text-rose-600 font-medium";
+            } elseif ($days_left <= 90) {
+                $status_text = "Priorité 2";
+                $badge_class = "bg-amber-50 text-amber-700 border border-amber-100";
+                $date_class = "text-amber-600 font-medium";
+            } else {
+                $status_text = "En Attente";
+                $badge_class = "bg-emerald-50 text-emerald-700 border border-emerald-100";
+                $date_class = "text-emerald-600 font-medium";
+            }
+        ?>
+            <tr class="hover:bg-slate-50/80 transition">
+                <td class="p-2 font-medium text-slate-800"><?php echo htmlspecialchars($user['product_name']); ?></td>
+                
+                <td class="p-2 text-slate-500 font-mono"><?php echo htmlspecialchars($user['lot_number']); ?></td>
+                
+                <td class="p-2">
+                    <span class="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded-sm font-medium">
+                        <?php echo htmlspecialchars($user['Emplacement'] ?? 'Non spécifié'); ?>
+                    </span>
+                </td>
+                
+                <td class="p-2 <?php echo $date_class; ?>">
+                    <?php echo date('d/m/Y', strtotime($user['expiration_date'])); ?>
+                </td>
+                
+                <td class="p-2">
+                    <span class="<?php echo $badge_class; ?> px-2 py-0.5 rounded-sm font-bold text-[9px] uppercase">
+                        <?php echo $status_text; ?>
+                    </span>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <tr>
+            <td colspan="5" class="p-4 text-center text-slate-400 italic">
+                No products found in the FEFO queue.
+            </td>
+        </tr>
+    <?php endif; ?> </tbody>
                     </table>
                 </div>
             </div>
@@ -274,5 +314,4 @@
         }
     </script>
 </body>
-
 </html>
