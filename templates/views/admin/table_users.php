@@ -77,7 +77,7 @@ $current_page = basename($_SERVER['SCRIPT_NAME']);
                 <p class="text-[10px] text-slate-500">Console Root</p>
             </div>
         </div>
-        <a href="logout.php" class="flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium text-rose-400/80 hover:text-rose-400 hover:bg-rose-500/5 rounded-md transition w-full">
+        <a href="../logout.php" class="flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium text-rose-400/80 hover:text-rose-400 hover:bg-rose-500/5 rounded-md transition w-full">
             <i class="fa-solid fa-arrow-right-from-bracket text-[11px]"></i> Déconnexion
         </a>
     </div>

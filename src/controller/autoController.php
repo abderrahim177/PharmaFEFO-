@@ -43,26 +43,29 @@ class Login {
                 if ($user && password_verify($password, $user['password'])) {
                     $_SESSION['user_id']   = $user['id'];
                     $_SESSION['user_name'] = $user['name'];
-                    $_SESSION['role_id']   = $user['role_id']; 
+                    $_SESSION['role']      = $user['role']; 
                     
-                    switch ($user['role_id']) {
-                        case 1: 
+                    switch (trim($user['role'])) {
+                        case 'admin':                       
                             header('Location: ../../templates/views/admin/dashboard.php');
                             break;
-                        case 2: 
+                            
+                        case 'Préparateur':                    
                             header('Location: ../../templates/views/Préparateur/dashboard.php');
                             break;
-                        case 3: 
+                            
+                        case 'Pharmacien': 
                             header('Location: ../../templates/views/Pharmacien/dashboard.php');
                             break;
+                            
                         default: 
-                            header('Location: ../../templates/views/page_error.php');
+                            header('Location: ../../templates/views/login.php?error=role_not_assigned');
                             break;
                     }
                     exit(); 
                     
                 } else {
-                   header('Location: ../../templates/views/page_error.php');
+                    header('Location: ../../templates/views/login.php?error=wrong_credentials');
                     exit();
                 }
 
