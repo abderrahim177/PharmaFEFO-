@@ -27,7 +27,7 @@ class Login {
     {
         if (isset($_POST['submit'])) {
             $email = trim($_POST['email']);
-            $password = trim($_POST['password']);
+            $password = trim($_POST['password']); // Hadu dyal l-form HTML (b9aw s7a7)
 
             if (empty($email) || empty($password)) {
                 header('Location: login.php?error=empty'); 
@@ -40,31 +40,41 @@ class Login {
                 $stmt->execute(['email' => $email]);
                 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                if ($user && password_verify($password, $user['password'])) {
-                    $_SESSION['user_id']   = $user['id'];
-                    $_SESSION['user_name'] = $user['name'];
-                    $_SESSION['role_id']   = $user['role_id']; 
+                // T9addat hna: khdemna b 'mot_de_passe' nishan kif 3ndk f l-DB
+                if ($user && password_verify($password, $user['mot_de_passe'])) {
                     
-                    switch ($user['role_id']) {
-                        case 1: 
+                    $_SESSION['user_id']   = $user['id_user'];
+                    $_SESSION['user_name'] = $user['nom'];
+                    $_SESSION['role']      = $user['role']; 
+                    
+                    switch (trim($user['role'])) {
+                        case 'admin':                                       
                             header('Location: ../../templates/views/admin/dashboard.php');
                             break;
-                        case 2: 
+                            
+                        case 'Preparateur':                    
+                        case 'Préparateur':                  
                             header('Location: ../../templates/views/Préparateur/dashboard.php');
                             break;
-                        case 3: 
+                            
+                        case 'Pharmacien': 
                             header('Location: ../../templates/views/Pharmacien/dashboard.php');
                             break;
+                            
                         default: 
-                            header('Location: ../../templates/views/page_error.php');
+                            header('Location: ../../templates/views/login.php?error=role_not_assigned');
                             break;
                     }
                     exit(); 
                     
                 } else {
-                   header('Location: ../../templates/views/page_error.php');
-                    exit();
+                if (!$user) {
+                    header('Location: ../../templates/views/login.php?error=email_not_found');
+                } else {
+                    header('Location: ../../templates/views/login.php?error=bad_password');
                 }
+                exit();
+}
 
             } catch (PDOException $e) {
                 header('Location: login.php?error=server_error');
