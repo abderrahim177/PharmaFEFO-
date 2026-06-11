@@ -110,4 +110,19 @@ public function GetAllProductsGloubal() {
         return [];
     }
 }
+public function deleteProductById($productId) {
+    try {
+        $queryLot = 'DELETE FROM lots WHERE product_id = :id';
+        $stmtLot = $this->pdo->prepare($queryLot);
+        $stmtLot->execute([':id' => $productId]);
+
+        $queryProduct = 'DELETE FROM products WHERE id = :id';
+        $stmtProduct = $this->pdo->prepare($queryProduct);
+        $stmtProduct->execute([':id' => $productId]);
+
+        return true;
+    } catch (PDOException $e) {
+        return false;
+    }
+}
 }

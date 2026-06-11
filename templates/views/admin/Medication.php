@@ -137,8 +137,11 @@ $repository = new ProductRepository($pdo);
                 
                 <td class="py-3 px-4 text-right">
                     <div class="flex items-center justify-end gap-1">
-                        <button title="Supprimer" data-id="<?php echo $prod['product_id']; ?>" class="btnDeleteProduct p-1 text-slate-400 hover:text-rose-600 hover:bg-slate-50 rounded transition cursor-pointer">
-                            <i class="fa-solid fa-trash-can text-[11px]"></i>
+                        <button title="Supprimer" 
+                        data-id="<?php echo $prod['product_id']; ?>" 
+                        data-name="<?php echo htmlspecialchars($prod['product_name']); ?>" 
+                        class="btnDeleteProduct p-1 text-slate-400 hover:text-rose-600 hover:bg-slate-50 rounded transition cursor-pointer">
+                    <i class="fa-solid fa-trash-can text-[11px]"></i>
                         </button>
                     </div>
                 </td>
@@ -169,31 +172,34 @@ $repository = new ProductRepository($pdo);
     </main>
 
     <div id="modalDeleteProduct" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 hidden opacity-0 transition-opacity duration-200">
-        <div class="bg-white rounded-xl border border-slate-100 shadow-xl max-w-sm w-full overflow-hidden transform scale-95 transition-transform duration-200">
-            <div class="p-5 text-center space-y-3">
-                <div class="w-10 h-10 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center mx-auto border border-rose-100">
-                    <i class="fa-solid fa-triangle-exclamation text-sm"></i>
-                </div>
-                <div class="space-y-1">
-                    <h3 class="text-xs font-semibold text-slate-800 uppercase tracking-wider">Supprimer le produit ?</h3>
-                    <p class="text-[11px] text-slate-400 leading-normal">
-                        Êtes-vous sûr de vouloir supprimer <span id="delete_product_name" class="font-semibold text-slate-700"></span> du catalogue ? Cette action est irréversible.
-                    </p>
-                </div>
+    <div class="bg-white rounded-xl border border-slate-100 shadow-xl max-w-sm w-full overflow-hidden transform scale-95 transition-transform duration-200">
+        <div class="p-5 text-center space-y-3">
+            <div class="w-10 h-10 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center mx-auto border border-rose-100">
+                <i class="fa-solid fa-triangle-exclamation text-sm"></i>
             </div>
-            <form action="/Pharmafefo-/src/controller/ProductController.php" method="POST" class="px-5 pb-5">
-                <input type="hidden" id="delete_product_id" name="id">
-                <div class="flex items-center justify-end gap-2 pt-1">
-                    <button type="button" class="btnCloseModal w-full border border-slate-200 text-slate-600 text-[11px] font-medium py-1.5 px-3 rounded-md hover:bg-slate-50 transition cursor-pointer">
-                        Annuler
-                    </button>
-                    <button type="submit" name="Supprimer" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-medium py-1.5 px-3 rounded-md text-[11px] transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer">
-                        <i class="fa-solid fa-trash-can text-[10px]"></i> Supprimer
-                    </button>
-                </div>
-            </form>
+            <div class="space-y-1">
+                <h3 class="text-xs font-semibold text-slate-800 uppercase tracking-wider">Supprimer le produit ?</h3>
+                <p class="text-[11px] text-slate-400 leading-normal">
+                    Êtes-vous sûr de vouloir supprimer <span id="delete_product_name" class="font-semibold text-slate-700"></span> du catalogue ? Cette action است irréversible.
+                </p>
+            </div>
         </div>
+        
+        <form action="/Pharmafefo-/src/controller/MedicalController.php" method="POST" class="px-5 pb-5">
+            <input type="hidden" name="action" value="delete_product">
+            <input type="hidden" id="delete_product_id" name="product_id">
+            
+            <div class="flex items-center justify-end gap-2 pt-1">
+                <button type="button" class="btnCloseModal w-full border border-slate-200 text-slate-600 text-[11px] font-medium py-1.5 px-3 rounded-md hover:bg-slate-50 transition cursor-pointer">
+                    Annuler
+                </button>
+                <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-medium py-1.5 px-3 rounded-md text-[11px] transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-trash-can text-[10px]"></i> Supprimer
+                </button>
+            </div>
+        </form>
     </div>
+</div>
 
     <script>
     document.addEventListener("DOMContentLoaded", function() {

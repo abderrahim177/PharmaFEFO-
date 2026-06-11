@@ -76,7 +76,29 @@ class Medicale_Controller {
             self::redirectTo('/Pharmafefo-/templates/views/Préparateur/dashboard.php');
         }
     }
+    public function DeleteProductClassic() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            self::redirectTo('/Pharmafefo-/templates/views/admin/Medication.php?error=invalid_method');
+        }
+
+        $productId = isset($_POST['product_id']) ? intval($_POST['product_id']) : 0;
+
+        if ($productId > 0) {
+            $isDeleted = $this->repository->deleteProductById($productId);
+            
+            if ($isDeleted) {
+                $_SESSION['success_message'] = "Produit supprimé avec succès !";
+            } else {
+                $_SESSION['error_message'] = "Impossible de supprimer le produit.";
+            }
+        } else {
+            $_SESSION['error_message'] = "ID de produit invalide.";
+        }
+
+        self::redirectTo('/Pharmafefo-/templates/views/admin/Medication.php');
+    }
 }
+
 
 
 if (isset($_POST['Enregistrer'])) {
@@ -93,4 +115,11 @@ if (isset($_POST['action']) && $_POST['action'] === 'search_classic') {
 
     $controller = new Medicale_Controller($db);
     $controller->SearchProductClassic();
+}
+if (isset($_POST['action']) && $_POST['action'] === 'delete_product') {
+    $database = new Database();
+    $db = $database->getConnection(); 
+
+    $controller = new Medicale_Controller($db);
+    $controller->DeleteProductClassic();
 }
