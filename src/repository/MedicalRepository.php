@@ -89,4 +89,25 @@ public function searchAllFefoLots($searchTerm) {
         return false;
     }
 }
+public function GetAllProductsGloubal() {
+    try {
+        $query = 'SELECT 
+                    p.id AS product_id,
+                    p.name AS product_name, 
+                    l.lot_number, 
+                    p.created_at, 
+                    l.quantity
+                  FROM products p
+                  INNER JOIN lots l ON p.id = l.product_id
+                  ORDER BY l.expiration_date ASC';
+
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    } catch (PDOException $e) {
+        return [];
+    }
+}
 }
