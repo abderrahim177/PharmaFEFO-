@@ -17,35 +17,76 @@
 <body class="bg-slate-50 text-slate-700 flex h-screen overflow-hidden">
 
     <!-- SIDEBAR -->
-    <aside class="w-64 bg-slate-950 text-slate-400 flex flex-col justify-between p-4 hidden md:flex shrink-0">
-        <div>
-            <div class="flex items-center gap-3 px-2 py-4 border-b border-slate-900">
-                <i class="fa-solid fa-key text-indigo-400 text-xl"></i>
-                <span class="text-lg font-medium tracking-wide text-white">PharmaStock</span>
+    <aside class="w-64 h-screen bg-slate-900 border-r border-slate-800 text-slate-400 flex flex-col justify-between p-4 hidden md:flex font-sans antialiased text-xs">
+    
+    <!-- Top Section: Logo & Navigation -->
+    <div>
+        <!-- Logo / Brand Header -->
+        <div class="flex items-center gap-3 px-3 py-4 border-b border-slate-800 mb-5">
+            <div class="p-2 bg-indigo-600/10 rounded-lg text-indigo-400 border border-indigo-500/20">
+                <i class="fa-solid fa-key text-base leading-none"></i>
             </div>
-            <nav class="mt-6 space-y-1">
-                <a href="dashboard.php" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-900 hover:text-white rounded-lg transition text-slate-400">
-                    <i class="fa-solid fa-gears w-5 text-sm"></i> Configuration
-                </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-2.5 bg-indigo-700 rounded-lg text-white font-medium transition">
-                    <i class="fa-solid fa-users-gear w-5 text-sm"></i> Utilisateurs
-                </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-900 hover:text-white rounded-lg transition text-slate-400">
-                    <i class="fa-solid fa-database w-5 text-sm"></i> Base Claude Bernard
-                </a>
-                <a href="#" class="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-900 hover:text-white rounded-lg transition text-slate-400">
-                    <i class="fa-solid fa-file-invoice-dollar w-5 text-sm"></i> Pertes Financières
-                </a>
-            </nav>
-        </div>
-        <div class="border-t border-slate-900 pt-4 flex items-center gap-3 px-2">
-            <div class="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-sm font-medium text-white">AD</div>
             <div>
-                <p class="text-sm font-medium text-slate-200">Admin Principal</p>
-                <p class="text-xs text-indigo-400">Console Root</p>
+                <span class="text-sm font-semibold tracking-wider text-white block">PharmaStock</span>
+                <span class="text-[10px] text-slate-500 font-medium tracking-tight uppercase">Management v1.0</span>
             </div>
         </div>
-    </aside>
+
+        <!-- Navigation Links -->
+        <nav class="space-y-1">
+            <!-- Active Link (Configuration) -->
+            <a href="dashboard.php" class="flex items-center gap-3 px-3 py-2.5 bg-indigo-600 text-white font-medium rounded-xl shadow-lg shadow-indigo-600/10 transition duration-200">
+                <i class="fa-solid fa-gears text-sm w-4 text-center"></i> 
+                <span class="tracking-wide">Configuration</span>
+            </a>
+
+            <!-- Users Link -->
+            <a href="table_users.php" class="flex items-center gap-3 px-3 py-2.5 hover:bg-slate-800 hover:text-slate-100 rounded-xl transition duration-150 font-medium group">
+                <i class="fa-solid fa-users-gear text-sm w-4 text-center text-slate-500 group-hover:text-indigo-400 transition"></i> 
+                <span class="tracking-wide">Utilisateurs</span>
+            </a>
+
+            <!-- Claude Bernard Database Link -->
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 hover:bg-slate-800 hover:text-slate-100 rounded-xl transition duration-150 font-medium group">
+                <i class="fa-solid fa-database text-sm w-4 text-center text-slate-500 group-hover:text-indigo-400 transition"></i> 
+                <span class="tracking-wide">Base Claude Bernard</span>
+            </a>
+
+            <!-- Financial Losses Link -->
+            <a href="#" class="flex items-center gap-3 px-3 py-2.5 hover:bg-slate-800 hover:text-slate-100 rounded-xl transition duration-150 font-medium group">
+                <i class="fa-solid fa-file-invoice-dollar text-sm w-4 text-center text-slate-500 group-hover:text-indigo-400 transition"></i> 
+                <span class="tracking-wide">Pertes Financières</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Bottom Section: User Profile & Logout -->
+    <div class="border-t border-slate-800 pt-4 space-y-3">
+        <!-- User Profile Card -->
+        <div class="flex items-center justify-between px-2 py-1.5 rounded-xl bg-slate-950/40 border border-slate-800/50">
+            <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-semibold text-white shadow-md shadow-indigo-600/20 text-xs">
+                    AD
+                </div>
+                <div>
+                    <p class="text-xs font-semibold text-slate-200 tracking-wide leading-tight">Admin Principal</p>
+                    <p class="text-[10px] text-indigo-400 font-medium tracking-wide">Console Root</p>
+                </div>
+            </div>
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-1" title="En ligne"></span>
+        </div>
+
+        <!-- Logout Button -->
+        <a href="logout.php" class="flex items-center justify-between px-3 py-2.5 text-rose-400 hover:text-rose-100 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 rounded-xl transition duration-200 group font-medium">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-right-from-bracket text-sm w-4 text-center text-rose-400/70 group-hover:text-rose-400 transition"></i>
+                <span class="tracking-wide">Déconnexion</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-[10px] opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition duration-200"></i>
+        </a>
+    </div>
+
+</aside>
 
     <!-- MAIN CONTENT -->
     <main class="flex-1 flex flex-col overflow-y-auto">
