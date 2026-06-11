@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,9 +12,12 @@
     <!-- Google Fonts: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Poppins', sans-serif; }
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
     </style>
 </head>
+
 <body class="bg-slate-50 text-slate-600 flex h-screen overflow-hidden text-[12px] antialiased">
 
     <!-- SIDEBAR -->
@@ -23,18 +27,18 @@
                 <i class="fa-solid fa-mortar-pestle text-teal-400 text-base"></i>
                 <span class="text-sm font-semibold tracking-wide text-white">PharmaStock</span>
             </div>
-            
+
             <nav class="mt-5 space-y-0.5">
                 <a href="#" class="flex items-center gap-2.5 px-3 py-2 bg-gradient-to-r from-teal-600/10 to-teal-600/5 border-l-2 border-teal-500 rounded-r-md text-white font-medium transition duration-200">
-                    <i class="fa-solid fa-boxes-stacked w-4 text-center text-teal-400 text-[12px]"></i> 
+                    <i class="fa-solid fa-boxes-stacked w-4 text-center text-teal-400 text-[12px]"></i>
                     <span>Gestion du Stock</span>
                 </a>
                 <a href="#" class="flex items-center gap-2.5 px-3 py-2 hover:bg-slate-900 hover:text-slate-200 border-l-2 border-transparent hover:border-slate-700 rounded-r-md transition duration-200 text-slate-400 group">
-                    <i class="fa-solid fa-barcode w-4 text-center text-[11px] text-slate-500 group-hover:text-teal-400 transition"></i> 
+                    <i class="fa-solid fa-barcode w-4 text-center text-[11px] text-slate-500 group-hover:text-teal-400 transition"></i>
                     <span>Scanner Entrée</span>
                 </a>
                 <a href="#" class="flex items-center gap-2.5 px-3 py-2 hover:bg-slate-900 hover:text-slate-200 border-l-2 border-transparent hover:border-slate-700 rounded-r-md transition duration-200 text-slate-400 group">
-                    <i class="fa-solid fa-hand-holding-medical w-4 text-center text-[11px] text-slate-500 group-hover:text-teal-400 transition"></i> 
+                    <i class="fa-solid fa-hand-holding-medical w-4 text-center text-[11px] text-slate-500 group-hover:text-teal-400 transition"></i>
                     <span>Sorties / Dispensation</span>
                 </a>
             </nav>
@@ -59,7 +63,7 @@
 
     <!-- MAIN CONTENT -->
     <main class="flex-1 flex flex-col overflow-y-auto">
-        
+
         <!-- TOPBAR -->
         <header class="bg-white border-b border-slate-100 h-12 flex items-center justify-between px-5 shrink-0 shadow-xs">
             <h1 class="text-[13px] font-semibold text-slate-800">Espace Préparateur & Logistique - Epic 1</h1>
@@ -73,7 +77,7 @@
 
         <!-- CONTAINER -->
         <div class="p-5 space-y-4 max-w-7xl w-full mx-auto">
-            
+
             <!-- QUICK STATS -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div class="bg-white p-4 rounded-lg border border-slate-100 shadow-sm flex items-center justify-between">
@@ -101,32 +105,51 @@
 
             <!-- WORKSPACE INTERACTIVE -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                
+
                 <!-- FORMULAIRE RÉCEPTION (US 1.1) -->
                 <div class="lg:col-span-1 bg-white p-4 rounded-lg border border-slate-100 shadow-sm h-fit">
                     <h3 class="text-[11px] font-bold text-slate-800 mb-3.5 uppercase tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-square-plus text-teal-500"></i> US 1.1 : Entrée Produit
                     </h3>
-                    <form class="space-y-3" onsubmit="return validateFEFOForm(event)">
+                    <?php if (isset($_GET['error_empty']) || isset($_SESSION['error_message'])): ?>
+                        <div class="bg-rose-50 border border-rose-200 text-rose-700 px-4 py-2.5 rounded-md mb-4 flex items-center gap-2 text-[11px] font-medium">
+                            <i class="fa-solid fa-circle-exclamation text-rose-500 text-xs"></i>
+                            <span>
+                                <?php
+                                echo $_SESSION['error_message'] ?? "All fields are required, and the quantity must be greater than zero.";
+                                unset($_SESSION['error_message']);
+                                ?>
+                            </span>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (isset($_GET['status']) && $_GET['status'] === 'success'): ?>
+                        <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-2.5 rounded-md mb-4 flex items-center gap-2 text-[11px] font-medium">
+                            <i class="fa-solid fa-circle-check text-emerald-500 text-xs"></i>
+                            <span><?php echo $_SESSION['success_message'] ?? "Product successfully accepted!";
+                                    unset($_SESSION['success_message']); ?></span>
+                        </div>
+                    <?php endif; ?>
+                    <form action="/Pharmafefo-/src/controller/MedicalController.php" method="POST" class="space-y-3" onsubmit="return validateFEFOForm(event)">
                         <div>
                             <label class="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Médicament</label>
-                            <input type="text" required placeholder="Ex: Augmentin 500mg" class="w-full px-2.5 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-teal-500 text-[11px] bg-slate-50/40 transition">
+                            <input type="text" name="pruduct_name" required placeholder="Ex: Augmentin 500mg" class="w-full px-2.5 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-teal-500 text-[11px] bg-slate-50/40 transition">
                         </div>
                         <div>
                             <label class="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Numéro de Lot</label>
-                            <input type="text" required placeholder="Ex: LOT-2026-X9" class="w-full px-2.5 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-teal-500 text-[11px] bg-slate-50/40 transition">
+                            <input type="text" name="product_lot" required placeholder="Ex: LOT-2026-X9" class="w-full px-2.5 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-teal-500 text-[11px] bg-slate-50/40 transition">
                         </div>
                         <div>
                             <label class="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Date Limite d'Utilisation (DLU)</label>
                             <!-- Min date programmé en JS pour bloquer le passé -->
-                            <input type="date" id="dlu_input" required class="w-full px-2.5 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-teal-500 text-[11px] bg-slate-50/40 transition">
+                            <input type="date" name="date_expiration" id="dlu_input" required class="w-full px-2.5 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-teal-500 text-[11px] bg-slate-50/40 transition">
                             <span class="text-[10px] text-rose-500 mt-0.5 hidden font-medium" id="date_error">La date doit être aujourd'hui ou dans le futur.</span>
                         </div>
                         <div>
                             <label class="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Quantité Reçue</label>
-                            <input type="number" required min="1" placeholder="Ex: 50" class="w-full px-2.5 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-teal-500 text-[11px] bg-slate-50/40 transition">
+                            <input type="number" name="stok" required min="1" placeholder="Ex: 50" class="w-full px-2.5 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-teal-500 text-[11px] bg-slate-50/40 transition">
                         </div>
-                        <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium py-1.5 rounded-md transition text-[11px] cursor-pointer shadow-xs mt-1">
+                        <button type="submit" name="Enregistrer" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium py-1.5 rounded-md transition text-[11px] cursor-pointer shadow-xs mt-1">
                             Classer dans la file FEFO
                         </button>
                     </form>
@@ -142,7 +165,7 @@
                             <span class="text-[9px] bg-sky-50 text-sky-700 px-2 py-0.5 rounded-sm font-bold border border-sky-100/50 uppercase tracking-wider">Algorithme Actif</span>
                         </div>
                         <p class="text-[11px] text-slate-400 mb-3">Saisissez le médicament demandé pour cibler automatiquement le lot prioritaire.</p>
-                        
+
                         <div class="relative mb-4">
                             <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-400 text-[10px]"></i>
                             <input type="text" value="Doliprane 1000mg Tab" class="w-full pl-7 pr-3 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-sky-500 text-[11px] font-medium bg-slate-50/40 transition">
@@ -181,7 +204,7 @@
                     </h3>
                     <span class="text-[10px] text-slate-400 italic">Trié automatiquement par ordre critique d'expiration</span>
                 </div>
-                
+
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
@@ -235,7 +258,7 @@
         function validateFEFOForm(event) {
             const dluInput = document.getElementById('dlu_input').value;
             const errorSpan = document.getElementById('date_error');
-            
+
             const selectedDate = new Date(dluInput);
             const currentDate = new Date(today);
 
@@ -244,11 +267,12 @@
                 errorSpan.classList.remove('hidden');
                 return false;
             }
-            
+
             errorSpan.classList.add('hidden');
             alert('Produit validé et classé selon l\'ordre FEFO !');
             return true;
         }
     </script>
 </body>
+
 </html>
