@@ -27,53 +27,61 @@ $coutUsers = $repository->getCoutUsers();
 </head>
 <body class="bg-slate-50 text-slate-600 flex h-screen overflow-hidden text-[12px] antialiased">
 
-     <aside class="w-60 bg-slate-900 text-slate-400 flex flex-col justify-between hidden md:flex border-r border-slate-800 shrink-0">
-        <div>
-            <div class="flex items-center gap-2.5 px-5 py-4 border-b border-slate-800/60">
-                <div class="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center text-white shadow-xs">
-                    <i class="fa-solid fa-prescription-bottle-medical text-xs"></i>
-                </div>
-                <span class="text-sm font-semibold tracking-tight text-white">PharmaStock</span>
-            </div>
-            
-            <nav class="mt-4 px-3 space-y-0.5">
-                <a href="dashboard.php" class="flex items-center justify-between px-3 py-2 hover:bg-slate-800/50 hover:text-slate-200 rounded-md text-xs font-normal transition">
-                    <div class="flex items-center gap-2.5">
-                        <i class="fa-solid fa-gears text-xs opacity-70"></i> Dashboard
-                    </div>
-                </a>
-                <a href="table_users.php" class="flex items-center justify-between px-3 py-2 hover:bg-slate-800/50 hover:text-slate-200 rounded-md text-xs font-normal transition">
-                    <div class="flex items-center gap-2.5">
-                        <i class="fa-solid fa-users-gear text-xs opacity-70"></i> Users
-                    </div>
-                </a>
-                <a href="Medication.php" class="flex items-center justify-between px-3 py-2 bg-indigo-600/10 text-indigo-400 rounded-md font-medium text-xs transition">
-                    <div class="flex items-center gap-2.5">
-                        <i class="fa-solid fa-database text-xs"></i> Medication Management 
-                    </div>
-                    <span class="text-[10px] bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded-full font-medium">Sync</span>
-                </a>
-                <a href="#" class="flex items-center justify-between px-3 py-2 hover:bg-slate-800/50 hover:text-slate-200 rounded-md text-xs font-normal transition">
-                    <div class="flex items-center gap-2.5">
-                        <i class="fa-solid fa-file-invoice-dollar text-xs opacity-70"></i> Pertes Financières
-                    </div>
-                </a>
-            </nav>
-        </div>
+     <?php
+// جلب إسم الملف الحالي (مثلاً: Medication.php أو dashboard.php)
+$current_page = basename($_SERVER['SCRIPT_NAME']);
+?>
 
-        <div class="border-t border-slate-800/60 p-3 space-y-2">
-            <div class="flex items-center gap-2.5 px-2 py-1.5 rounded-lg bg-slate-950/40">
-                <div class="w-7 h-7 rounded-md bg-indigo-600 flex items-center justify-center text-[11px] font-bold text-white shadow-xs">AD</div>
-                <div class="leading-tight">
-                    <p class="text-xs font-medium text-slate-200">Admin Principal</p>
-                    <p class="text-[10px] text-slate-500">Console Root</p>
-                </div>
+<aside class="w-60 bg-slate-900 text-slate-400 flex flex-col justify-between hidden md:flex border-r border-slate-800 shrink-0">
+    <div>
+        <div class="flex items-center gap-2.5 px-5 py-4 border-b border-slate-800/60">
+            <div class="w-7 h-7 bg-indigo-600 rounded-lg flex items-center justify-center text-white shadow-xs">
+                <i class="fa-solid fa-prescription-bottle-medical text-xs"></i>
             </div>
-            <a href="logout.php" class="flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium text-rose-400/80 hover:text-rose-400 hover:bg-rose-500/5 rounded-md transition w-full">
-                <i class="fa-solid fa-arrow-right-from-bracket text-[11px]"></i> Déconnexion
-            </a>
+            <span class="text-sm font-semibold tracking-tight text-white">PharmaStock</span>
         </div>
-    </aside>
+        
+        <nav class="mt-4 px-3 space-y-0.5">
+            <a href="dashboard.php" class="flex items-center justify-between px-3 py-2 rounded-md text-xs transition <?php echo ($current_page == 'dashboard.php') ? 'bg-indigo-600/10 text-indigo-400 font-medium' : 'hover:bg-slate-800/50 hover:text-slate-200 font-normal'; ?>">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-gears text-xs <?php echo ($current_page == 'dashboard.php') ? '' : 'opacity-70'; ?>"></i> Dashboard
+                </div>
+            </a>
+
+            <a href="table_users.php" class="flex items-center justify-between px-3 py-2 rounded-md text-xs transition <?php echo ($current_page == 'table_users.php') ? 'bg-indigo-600/10 text-indigo-400 font-medium' : 'hover:bg-slate-800/50 hover:text-slate-200 font-normal'; ?>">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-users-gear text-xs <?php echo ($current_page == 'table_users.php') ? '' : 'opacity-70'; ?>"></i> Users
+                </div>
+            </a>
+
+            <a href="Medication.php" class="flex items-center justify-between px-3 py-2 rounded-md text-xs transition <?php echo ($current_page == 'Medication.php') ? 'bg-indigo-600/10 text-indigo-400 font-medium' : 'hover:bg-slate-800/50 hover:text-slate-200 font-normal'; ?>">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-database text-xs"></i> Medication Management 
+                </div>
+                <span class="text-[10px] bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded-full font-medium">Sync</span>
+            </a>
+
+            <a href="pertes.php" class="flex items-center justify-between px-3 py-2 rounded-md text-xs transition <?php echo ($current_page == 'pertes.php') ? 'bg-indigo-600/10 text-indigo-400 font-medium' : 'hover:bg-slate-800/50 hover:text-slate-200 font-normal'; ?>">
+                <div class="flex items-center gap-2.5">
+                    <i class="fa-solid fa-file-invoice-dollar text-xs <?php echo ($current_page == 'pertes.php') ? '' : 'opacity-70'; ?>"></i> Pertes Financières
+                </div>
+            </a>
+        </nav>
+    </div>
+
+    <div class="border-t border-slate-800/60 p-3 space-y-2">
+        <div class="flex items-center gap-2.5 px-2 py-1.5 rounded-lg bg-slate-950/40">
+            <div class="w-7 h-7 rounded-md bg-indigo-600 flex items-center justify-center text-[11px] font-bold text-white shadow-xs">AD</div>
+            <div class="leading-tight">
+                <p class="text-xs font-medium text-slate-200">Admin Principal</p>
+                <p class="text-[10px] text-slate-500">Console Root</p>
+            </div>
+        </div>
+        <a href="logout.php" class="flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium text-rose-400/80 hover:text-rose-400 hover:bg-rose-500/5 rounded-md transition w-full">
+            <i class="fa-solid fa-arrow-right-from-bracket text-[11px]"></i> Déconnexion
+        </a>
+    </div>
+</aside>
 
     <main class="flex-1 flex flex-col overflow-y-auto">
         <header class="bg-white border-b border-slate-100 h-12 flex items-center justify-between px-5 shrink-0 shadow-xs">
