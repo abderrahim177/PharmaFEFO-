@@ -56,47 +56,52 @@ $alertesCompte   = $dashboardRepo->getAlertesCompte();
     </style>
 </head>
 
-<body class="bg-slate-50 text-slate-600 flex h-screen overflow-hidden text-[12px] antialiased">
+<body class="bg-teal-600 text-slate-600 flex h-screen overflow-hidden text-[12px] antialiased">
 
-    <aside class="w-60 bg-slate-950 text-slate-400 flex flex-col justify-between p-3.5 hidden md:flex shrink-0">
-        <div>
-            <div class="flex items-center gap-2.5 px-2 py-3 border-b border-slate-900/80">
-                <i class="fa-solid fa-mortar-pestle text-teal-400 text-base"></i>
-                <span class="text-sm font-semibold tracking-wide text-white">PharmaStock</span>
-            </div>
-
-            <nav class="mt-5 space-y-0.5">
-                <a href="#" class="flex items-center gap-2.5 px-3 py-2 bg-gradient-to-r from-teal-600/10 to-teal-600/5 border-l-2 border-teal-500 rounded-r-md text-white font-medium transition duration-200">
-                    <i class="fa-solid fa-boxes-stacked w-4 text-center text-teal-400 text-[12px]"></i>
-                    <span>Gestion du Stock</span>
-                </a>
-                <a href="#" class="flex items-center gap-2.5 px-3 py-2 hover:bg-slate-900 hover:text-slate-200 border-l-2 border-transparent hover:border-slate-700 rounded-r-md transition duration-200 text-slate-400 group">
-                    <i class="fa-solid fa-barcode w-4 text-center text-[11px] text-slate-500 group-hover:text-teal-400 transition"></i>
-                    <span>Scanner Entrée</span>
-                </a>
-                <a href="#" class="flex items-center gap-2.5 px-3 py-2 hover:bg-slate-900 hover:text-slate-200 border-l-2 border-transparent hover:border-slate-700 rounded-r-md transition duration-200 text-slate-400 group">
-                    <i class="fa-solid fa-hand-holding-medical w-4 text-center text-[11px] text-slate-500 group-hover:text-teal-400 transition"></i>
-                    <span>Sorties / Dispensation</span>
-                </a>
-            </nav>
+    <aside class="w-60 bg-teal-900 text-emerald-300/80 flex flex-col justify-between p-3.5 hidden md:flex shrink-0 border-r border-emerald-900/50">
+    <div>
+        <div class="flex items-center gap-2.5 px-2 py-3 border-b border-emerald-900/60">
+            <i class="fa-solid fa-mortar-pestle text-emerald-400 text-base"></i>
+            <span class="text-sm font-medium tracking-wide text-emerald-50">PharmaStock</span>
         </div>
 
-        <div class="space-y-3">
-            <div class="border-t border-slate-900/80 pt-3 flex items-center gap-2.5 px-2">
-                <div class="w-8 h-8 rounded-md bg-teal-600/20 text-teal-400 border border-teal-500/20 flex items-center justify-center text-[11px] font-bold"><?php echo $userInitials; ?></div>
-                <div>
-                    <p class="text-[12px] font-medium text-slate-200 leading-tight"><?= $name ?></p>
-                    <p class="text-[10px] text-teal-500 font-medium leading-none mt-0.5"><?= $role ?></p>
-                </div>
-            </div>
-            <a href="../logout.php" class="flex items-center justify-between px-2.5 py-1.5 text-rose-400/90 hover:text-rose-100 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/10 rounded-md transition duration-200 group font-medium text-[11px]">
-                <div class="flex items-center gap-2.5">
-                    <i class="fa-solid fa-right-from-bracket w-4 text-center text-rose-400/60 group-hover:text-rose-400 transition"></i>
-                    <span class="tracking-wide">Déconnexion</span>
-                </div>
+        <nav class="mt-5 space-y-1">
+            <a href="#" class="flex items-center gap-2.5 px-3 py-2 bg-gradient-to-r from-emerald-500/15 to-emerald-500/5 border-l-2 border-emerald-400 rounded-r-md text-emerald-50 font-normal transition duration-200">
+                <i class="fa-solid fa-boxes-stacked w-4 text-center text-emerald-400 text-[12px]"></i>
+                <span>Gestion du Stock</span>
             </a>
+            
+            <a href="#" class="flex items-center gap-2.5 px-3 py-2 hover:bg-emerald-900/40 hover:text-emerald-100 border-l-2 border-transparent hover:border-emerald-700/50 rounded-r-md transition duration-200 text-emerald-400/80 group font-normal">
+                <i class="fa-solid fa-barcode w-4 text-center text-[11px] text-emerald-500 group-hover:text-emerald-400 transition"></i>
+                <span>Scanner Entrée</span>
+            </a>
+            
+            <a href="#" class="flex items-center gap-2.5 px-3 py-2 hover:bg-emerald-900/40 hover:text-emerald-100 border-l-2 border-transparent hover:border-emerald-700/50 rounded-r-md transition duration-200 text-emerald-400/80 group font-normal">
+                <i class="fa-solid fa-hand-holding-medical w-4 text-center text-[11px] text-emerald-500 group-hover:text-emerald-400 transition"></i>
+                <span>Sorties / Dispensation</span>
+            </a>
+        </nav>
+    </div>
+
+    <div class="space-y-3">
+        <div class="border-t border-emerald-900/60 pt-3 flex items-center gap-2.5 px-2">
+            <div class="w-8 h-8 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center text-[11px] font-medium">
+                <?php echo $userInitials; ?>
+            </div>
+            <div>
+                <p class="text-[12px] font-normal text-emerald-100 leading-tight"><?= $name ?></p>
+                <p class="text-[10px] text-emerald-400/70 font-normal leading-none mt-0.5"><?= $role ?></p>
+            </div>
         </div>
-    </aside>
+        
+        <a href="../logout.php" class="flex items-center justify-between px-2.5 py-1.5 text-rose-400/90 hover:text-rose-100 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/10 rounded-md transition duration-200 group font-normal text-[11px]">
+            <div class="flex items-center gap-2.5">
+                <i class="fa-solid fa-right-from-bracket w-4 text-center text-rose-400/60 group-hover:text-rose-400 transition"></i>
+                <span class="tracking-wide">Déconnexion</span>
+            </div>
+        </a>
+    </div>
+</aside>
 
     <main class="flex-1 flex flex-col overflow-y-auto">
 
@@ -214,7 +219,7 @@ $alertesCompte   = $dashboardRepo->getAlertesCompte();
                             <div class="relative">
                                 <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-400 text-[10px]"></i>
                                 <input type="text" name="query" value="<?php echo isset($_SESSION['last_search']) ? htmlspecialchars($_SESSION['last_search']) : ''; ?>" placeholder="Saisissez le médicament demandé (Ex: Doliprane)..." class="w-full pl-7 pr-20 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-sky-500 text-[11px] font-medium bg-slate-50/40 transition">
-                                <button type="submit" class="absolute right-1 top-1 bottom-1 bg-sky-600 hover:bg-sky-700 text-white px-3 rounded-md text-[10px] font-medium transition">
+                                <button type="submit" class="absolute right-1 top-1 bottom-1 bg-green-600 hover:bg-green-700 text-white px-3 rounded-md text-[10px] font-medium transition">
                                     Chercher
                                 </button>
                             </div>
@@ -269,7 +274,7 @@ $alertesCompte   = $dashboardRepo->getAlertesCompte();
                                 </form>
 
                             <?php else: ?>
-                                <div class="bg-slate-950 text-slate-400 p-4 rounded-lg border border-slate-900 text-center text-[11px] italic">
+                                <div class="bg-white text-slate-400 p-4 rounded-lg  text-center text-[11px] italic">
                                     <?php echo $search_error ?? "Veuillez chercher un médicament pour afficher ses lots..."; ?>
                                 </div>
                             <?php
