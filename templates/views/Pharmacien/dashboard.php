@@ -9,6 +9,8 @@ $pdo = $dbInstance->getConnection();
 $repository = new TotalLots($pdo);
 $criticiteStats = $repository->getLotsCriticiteStats();
 $Stocks = $repository->getStockProducts();
+$allNotifications = $repository->getUnreadNotifications(); 
+$criticiteStats = $repository->getLotsCriticiteStats();
 ?>
 
 <!DOCTYPE html>
@@ -66,7 +68,7 @@ $Stocks = $repository->getStockProducts();
     </aside>
 
     <main class="flex-1 flex flex-col overflow-y-auto">
-        <header class="bg-white border-b border-slate-200 h-14 flex items-center justify-between px-6 shrink-0 relative">
+    <header class="bg-white border-b border-slate-200 h-14 flex items-center justify-between px-6 shrink-0 relative">
     <h1 class="text-[13px] font-medium text-slate-800">Supervision du Titulaire</h1>
     
     <div class="relative inline-block text-left" id="notification-wrapper">
@@ -74,45 +76,61 @@ $Stocks = $repository->getStockProducts();
         <button id="notif-btn" class="relative w-8 h-8 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-center text-slate-500 hover:text-slate-700 hover:bg-slate-100 hover:border-slate-300 transition cursor-pointer focus:outline-hidden">
             <i class="fa-solid fa-bell text-xs"></i>
             
-            <span id="notif-count" class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[9px] font-medium text-white ring-2 ring-white animate-pulse">
-                3
-            </span>
+            <?php 
+            $notifCount = count($allNotifications); 
+            if ($notifCount > 0): 
+            ?>
+                <span id="notif-count" class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[9px] font-medium text-white ring-2 ring-white animate-pulse">
+                    <?php echo $notifCount; ?>
+                </span>
+            <?php endif; ?>
         </button>
 
         <div id="notif-dropdown" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-xl border border-slate-200/85 shadow-lg shrink-0 z-50 overflow-hidden transform origin-top-right transition-all">
             
             <div class="px-3.5 py-2.5 border-b border-slate-100 flex items-center justify-between bg-slate-50/60">
                 <span class="text-[11px] font-semibold text-slate-700 uppercase tracking-wider">Notifications</span>
-                <button id="mark-all-read" class="text-[10px] text-teal-600 hover:text-teal-700 font-medium hover:underline cursor-pointer">
-                    Tout marquer comme lu
-                </button>
+                
+                <?php if ($notifCount > 0): ?>
+                    <button id="mark-all-read" class="text-[10px] text-teal-600 hover:text-teal-700 font-medium hover:underline cursor-pointer">
+                        Tout marquer comme lu
+                    </button>
+                <?php else: ?>
+                    <button id="mark-all-read" class="text-[10px] text-slate-300 cursor-not-allowed no-underline" disabled>
+                        Tout marquer comme lu
+                    </button>
+                <?php endif; ?>
             </div>
 
             <div id="notif-list" class="max-h-60 overflow-y-auto divide-y divide-slate-100">
                 
-                <div class="p-3 hover:bg-slate-50/60 transition flex gap-2.5 items-start">
-                    <div class="w-2 h-2 rounded-full bg-rose-500 mt-1 shrink-0"></div>
-                    <div class="space-y-0.5">
-                        <p class="text-xs text-slate-700 font-medium leading-normal">14 produits expirent le mois prochain.</p>
-                        <p class="text-[10px] text-slate-400"><i class="fa-regular fa-clock text-[9px]"></i> Il y a 5 min</p>
+                <?php 
+                if ($notifCount > 0): 
+                    foreach ($allNotifications as $notif): 
+                        $dotColor = (isset($notif['type']) && $notif['type'] === 'warning') ? 'bg-amber-500' : 'bg-rose-500';
+                ?>
+                        <div class="p-3 hover:bg-slate-50/60 transition flex gap-2.5 items-start">
+                            <div class="w-2 h-2 rounded-full <?php echo $dotColor; ?> mt-1 shrink-0"></div>
+                            
+                            <div class="space-y-0.5">
+                                <p class="text-xs text-slate-700 font-normal leading-normal">
+                                    <?php echo htmlspecialchars($notif['message']); ?>
+                                </p>
+                                <p class="text-[10px] text-slate-400">
+                                    <i class="fa-regular fa-clock text-[9px]"></i> 
+                                    <?php echo date('d/m/Y H:i', strtotime($notif['created_at'])); ?>
+                                </p>
+                            </div>
+                        </div>
+                <?php 
+                    endforeach; 
+                else: 
+                ?>
+                    <div class="p-6 text-center text-slate-400 italic flex flex-col items-center gap-1.5">
+                        <i class="fa-solid fa-bell-slash text-slate-300 text-sm"></i>
+                        <p class="text-[11px]">Aucune notification non lue</p>
                     </div>
-                </div>
-
-                <div class="p-3 hover:bg-slate-50/60 transition flex gap-2.5 items-start">
-                    <div class="w-2 h-2 rounded-full bg-amber-500 mt-1 shrink-0"></div>
-                    <div class="space-y-0.5">
-                        <p class="text-xs text-slate-700 font-normal leading-normal">Lot <span class="font-mono text-[11px]">KARD-882-Z</span> approche de la zone orange.</p>
-                        <p class="text-[10px] text-slate-400"><i class="fa-regular fa-clock text-[9px]"></i> Il y a 1h</p>
-                    </div>
-                </div>
-
-                <div class="p-3 hover:bg-slate-50/60 transition flex gap-2.5 items-start">
-                    <div class="w-2 h-2 rounded-full bg-rose-500 mt-1 shrink-0"></div>
-                    <div class="space-y-0.5">
-                        <p class="text-xs text-slate-700 font-medium leading-normal">Amoxicilline Sandoz est dépassée (Alerte Rouge).</p>
-                        <p class="text-[10px] text-slate-400"><i class="fa-regular fa-clock text-[9px]"></i> Hier</p>
-                    </div>
-                </div>
+                <?php endif; ?>
 
             </div>
 
@@ -124,7 +142,6 @@ $Stocks = $repository->getStockProducts();
         </div>
     </div>
 </header>
-
         <div class="p-6 space-y-5 max-w-7xl w-full mx-auto">
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
