@@ -3,7 +3,21 @@ require_once __DIR__ . "/../../../config/database.php";
 require_once __DIR__ . "/../../../src/repository/DashboardRepository.php";
 require_once __DIR__ . "/../../../src/repository/UserRepository.php";
 // 2. Instanciation dial l-BDD u l-Repository
+$name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Utilisateur';
+$role = isset($_SESSION['role']) ? $_SESSION['role'] : 'Inconnu';
 
+function getInitials($fullName) {
+    $words = explode(' ', trim($fullName));
+    $initials = '';
+    
+    foreach ($words as $word) {
+        if (!empty($word)) {
+            $initials .= mb_substr($word, 0, 1, 'UTF-8');
+        }
+    }
+    return mb_strtoupper(mb_substr($initials, 0, 2, 'UTF-8'), 'UTF-8');
+}
+$userInitials = getInitials($name);
 $dbInstance = new Database();
 $pdo = $dbInstance->getConnection();
 $repository = new globaleStatics($pdo);
@@ -77,10 +91,10 @@ $userCounts = $repositorys->getUsersCountByRole();
 
         <div class="border-t border-slate-800/60 p-3 space-y-2">
             <div class="flex items-center gap-2.5 px-2 py-1.5 rounded-lg bg-slate-950/40">
-                <div class="w-7 h-7 rounded-md bg-indigo-600 flex items-center justify-center text-[11px] font-bold text-white shadow-xs">AD</div>
+                <div class="w-7 h-7 rounded-md bg-indigo-600 flex items-center justify-center text-[11px] font-bold text-white shadow-xs"><?= $userInitials ?></div>
                 <div class="leading-tight">
-                    <p class="text-xs font-medium text-slate-200">Admin Principal</p>
-                    <p class="text-[10px] text-slate-500">Console Root</p>
+                    <p class="text-xs font-medium text-slate-200"><?= $name ?></p>
+                    <p class="text-[10px] text-slate-500"><?= $role ?> Principal</p>
                 </div>
             </div>
             <a href="../logout.php" class="flex items-center gap-2.5 px-3 py-1.5 text-xs font-medium text-rose-400/80 hover:text-rose-400 hover:bg-rose-500/5 rounded-md transition w-full">

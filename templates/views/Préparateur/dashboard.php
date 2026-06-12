@@ -1,9 +1,23 @@
 <?php 
-// 1. بدء الجلسة (Session) لقراءة نتائج البحث الكلاسيكي
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+$name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Utilisateur';
+$role = isset($_SESSION['role']) ? $_SESSION['role'] : 'Inconnu';
+
+function getInitials($fullName) {
+    $words = explode(' ', trim($fullName));
+    $initials = '';
+    
+    foreach ($words as $word) {
+        if (!empty($word)) {
+            $initials .= mb_substr($word, 0, 1, 'UTF-8');
+        }
+    }
+    return mb_strtoupper(mb_substr($initials, 0, 2, 'UTF-8'), 'UTF-8');
+}
+$userInitials = getInitials($name);
 require_once __DIR__ . "/../../../config/database.php"; 
 require_once __DIR__ . "/../../../src/repository/MedicalRepository.php"; 
 
@@ -59,10 +73,10 @@ $product_results = isset($_SESSION['fefo_results']) ? $_SESSION['fefo_results'] 
 
         <div class="space-y-3">
             <div class="border-t border-slate-900/80 pt-3 flex items-center gap-2.5 px-2">
-                <div class="w-8 h-8 rounded-md bg-teal-600/20 text-teal-400 border border-teal-500/20 flex items-center justify-center text-[11px] font-bold">Y</div>
+                <div class="w-8 h-8 rounded-md bg-teal-600/20 text-teal-400 border border-teal-500/20 flex items-center justify-center text-[11px] font-bold"><?php echo $userInitials; ?></div>
                 <div>
-                    <p class="text-[12px] font-medium text-slate-200 leading-tight">Youssef .K</p>
-                    <p class="text-[10px] text-teal-500 font-medium leading-none mt-0.5">Préparateur</p>
+                    <p class="text-[12px] font-medium text-slate-200 leading-tight"><?= $name ?></p>
+                    <p class="text-[10px] text-teal-500 font-medium leading-none mt-0.5"><?= $role ?></p>
                 </div>
             </div>
             <a href="../logout.php" class="flex items-center justify-between px-2.5 py-1.5 text-rose-400/90 hover:text-rose-100 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/10 rounded-md transition duration-200 group font-medium text-[11px]">

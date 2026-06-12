@@ -30,7 +30,7 @@ class Login {
             $password = trim($_POST['password']);
 
             if (empty($email) || empty($password)) {
-                header('Location: login.php?error=empty'); 
+                header('Location: ../../templates/views/login.php?error=empty'); 
                 exit();
             }
 
@@ -41,20 +41,28 @@ class Login {
                 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 if ($user && password_verify($password, $user['password'])) {
+                    
+                    if (trim(strtolower($user['status'])) !== 'actif') {
+                        header('Location: ../../templates/views/login.php?error=account_inactive');
+                        exit();
+                    }
+
                     $_SESSION['user_id']   = $user['id'];
                     $_SESSION['user_name'] = $user['name'];
-                    $_SESSION['role']      = $user['role']; 
+                    $_SESSION['role']      = trim($user['role']); 
                     
-                    switch (trim($user['role'])) {
+                    $userRole = strtolower(trim($user['role']));
+
+                    switch ($userRole) {
                         case 'admin':                       
                             header('Location: ../../templates/views/admin/dashboard.php');
                             break;
                             
-                        case 'Préparateur':                    
+                        case 'preparateur':                    
                             header('Location: ../../templates/views/Préparateur/dashboard.php');
                             break;
                             
-                        case 'Pharmacien': 
+                        case 'pharmacien': 
                             header('Location: ../../templates/views/Pharmacien/dashboard.php');
                             break;
                             
@@ -70,7 +78,7 @@ class Login {
                 }
 
             } catch (PDOException $e) {
-                header('Location: login.php?error=server_error');
+                header('Location: ../../templates/views/login.php?error=server_error');
                 exit();
             }
         }
