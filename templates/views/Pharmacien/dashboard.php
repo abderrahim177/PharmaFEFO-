@@ -2,17 +2,23 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
 require_once __DIR__ . "/../../../config/database.php"; 
 require_once __DIR__ . "/../../../src/repository/StockBatchRepository.php"; 
-$dbInstance = new Database(); 
-$pdo = $dbInstance->getConnection(); 
-$repository = new TotalLots($pdo);
-$criticiteStats = $repository->getLotsCriticiteStats();
-$Stocks = $repository->getStockProducts();
-$allNotifications = $repository->getUnreadNotifications(); 
-$criticiteStats = $repository->getLotsCriticiteStats();
-?>
 
+try {
+    $dbInstance = new Database(); 
+    $pdo = $dbInstance->getConnection(); 
+    $repository = new TotalLots($pdo); 
+    $repository->checkAndGenerateNotifications();
+    $allNotifications = $repository->getUnreadNotifications(); 
+    $criticiteStats = $repository->getLotsCriticiteStats();
+    $Stocks = $repository->getStockProducts();
+
+} catch (Exception $e) {
+    die("Erreur Fatale Dashboard: " . $e->getMessage());
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>

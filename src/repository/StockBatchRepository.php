@@ -48,36 +48,54 @@ class TotalLots{
 public function checkAndGenerateNotifications() : void
 {
     try {
-        $query = "SELECT l.id AS lot_id, p.name AS product_name, l.expiration_date 
+        $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 6; 
+        $query = "SELECT l.id AS lot_id, l.lot_number, p.name AS product_name, l.expiration_date 
                   FROM lots l
                   INNER JOIN products p ON p.id = l.product_id
                   WHERE l.quantity > 0 
-                    AND l.expiration_date <= CURDATE() + INTERVAL 30 DAY
-                    AND l.id NOT IN (SELECT lot_id FROM notifications WHERE type = 'danger')";
+                    AND l.expiration_date <= CURDATE() + INTERVAL 30 DAY";
         
         $stmt = $this->pdo->query($query);
         $lotsToNotify = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if (!empty($lotsToNotify)) {
-            $insertQuery = "INSERT INTO notifications (lot_id, message, type, is_read, created_at) 
-                            VALUES (:lot_id, :message, 'danger', 0, NOW())";
+            $insertQuery = "INSERT INTO notifications (user_id, title, message, is_read, created_at) 
+                            VALUES (:user_id, :title, :message, 0, NOW())";
             $insertStmt = $this->pdo->prepare($insertQuery);
 
             foreach ($lotsToNotify as $lot) {
-                $message = "Le lot du produit " . $lot['product_name'] . " expire le " . date('d/m/Y', strtotime($lot['expiration_date'])) . " !";
-                
-                $insertStmt->execute([
-                    'lot_id'  => $lot['lot_id'],
-                    'message' => $message
+                $title = "Alerte Expiration : Lot " . $lot['lot_number'];
+                $message = "Le produit " . $lot['product_name'] . " (Lot: " . $lot['lot_number'] . ") va périmer le " . date('d/m/Y', strtotime($lot['expiration_date'])) . " !";
+                                $checkNotif = $this->pdo->prepare("SELECT id FROM notifications WHERE user_id = :user_id AND title = :title");
+                $checkNotif->execute([
+                    'user_id' => $userId, 
+                    'title'   => $title
                 ]);
+                
+                if ($checkNotif->rowCount() == 0) {
+                    $insertStmt->execute([
+                        'user_id' => $userId,
+                        'title'   => $title,
+                        'message' => $message
+                    ]);
+                }
             }
         }
     } catch (PDOException $e) {
-        error_log("Erreur de génération des notifications: " . $e->getMessage());
+        die("Erreur Fatale SQL Notification: " . $e->getMessage());
     }
 }
-public function getUnreadNotifications() : array {
-    $stmt = $this->pdo->query("SELECT * FROM notifications WHERE is_read = 0 ORDER BY created_at DESC");
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+public function getUnreadNotifications() : array 
+{
+    try {
+        $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 6;
+
+        $stmt = $this->pdo->prepare("SELECT * FROM notifications WHERE user_id = :user_id AND is_read = 0 ORDER BY created_at DESC");
+        $stmt->execute(['user_id' => $userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+    } catch (PDOException $e) {
+        return [];
+    }
 }
 }
