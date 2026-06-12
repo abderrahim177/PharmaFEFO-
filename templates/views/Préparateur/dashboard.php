@@ -19,18 +19,22 @@ function getInitials($fullName)
     return mb_strtoupper(mb_substr($initials, 0, 2, 'UTF-8'), 'UTF-8');
 }
 $userInitials = getInitials($name);
+
 require_once __DIR__ . "/../../../config/database.php";
 require_once __DIR__ . "/../../../src/repository/MedicalRepository.php";
 require_once __DIR__ . "/../../../src/repository/DashboardRepository.php";
-// 2. Instanciation dial l-BDD u l-Repository
+
+// 2. Instanciation de la BDD et des Repositories
 $dbInstance = new Database();
 $pdo = $dbInstance->getConnection();
 $repository = new ProductRepository($pdo);
 $dashboardRepo = new globaleStatics($pdo);
-$Allusers = $repository->GetAllProducts();
 
+// جلب المنتجات والـ Lots
+$Allusers = $repository->GetAllProducts();
 $product_results = isset($_SESSION['fefo_results']) ? $_SESSION['fefo_results'] : [];
-// code des cards
+
+// كود الإحصائيات د الـ Cards
 $lotsCeJour      = $dashboardRepo->getEntreesCeJour();
 $dispensations   = $dashboardRepo->getDispensationsTotal();
 $alertesCompte   = $dashboardRepo->getAlertesCompte();
@@ -109,13 +113,10 @@ $alertesCompte   = $dashboardRepo->getAlertesCompte();
         <div class="p-5 space-y-4 max-w-7xl w-full mx-auto">
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-
                 <div class="bg-white p-4 rounded-lg border border-slate-100 shadow-sm flex items-center justify-between">
                     <div>
                         <p class="text-[10px] text-slate-400 font-bold tracking-wider uppercase">Entrées ce jour</p>
-                        <p class="text-base font-semibold mt-0.5 text-slate-800">
-                            <?php echo (int)$lotsCeJour; ?> Lot(s)
-                        </p>
+                        <p class="text-base font-semibold mt-0.5 text-slate-800"><?php echo (int)$lotsCeJour; ?> Lot(s)</p>
                     </div>
                     <div class="w-8 h-8 bg-teal-50 text-teal-600 border border-teal-100/40 rounded-md flex items-center justify-center text-xs">
                         <i class="fa-solid fa-circle-plus"></i>
@@ -125,9 +126,7 @@ $alertesCompte   = $dashboardRepo->getAlertesCompte();
                 <div class="bg-white p-4 rounded-lg border border-slate-100 shadow-sm flex items-center justify-between">
                     <div>
                         <p class="text-[10px] text-slate-400 font-bold tracking-wider uppercase">Dispensations (FEFO)</p>
-                        <p class="text-base font-semibold mt-0.5 text-slate-800">
-                            <?php echo (int)$dispensations; ?> Boîte(s)
-                        </p>
+                        <p class="text-base font-semibold mt-0.5 text-slate-800"><?php echo (int)$dispensations; ?> Boîte(s)</p>
                     </div>
                     <div class="w-8 h-8 bg-sky-50 text-sky-600 border border-sky-100/40 rounded-md flex items-center justify-center text-xs">
                         <i class="fa-solid fa-prescription-bottle-medical"></i>
@@ -137,15 +136,12 @@ $alertesCompte   = $dashboardRepo->getAlertesCompte();
                 <div class="bg-white p-4 rounded-lg border border-slate-100 shadow-sm flex items-center justify-between">
                     <div>
                         <p class="text-[10px] text-slate-400 font-bold tracking-wider uppercase">Alertes à traiter</p>
-                        <p class="text-base font-semibold mt-0.5 text-rose-600">
-                            <?php echo (int)$alertesCompte; ?> Produit(s)
-                        </p>
+                        <p class="text-base font-semibold mt-0.5 text-rose-600"><?php echo (int)$alertesCompte; ?> Produit(s)</p>
                     </div>
                     <div class="w-8 h-8 bg-rose-50 text-rose-600 border border-rose-100/40 rounded-md flex items-center justify-center text-xs">
                         <i class="fa-solid fa-triangle-exclamation"></i>
                     </div>
                 </div>
-
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -154,6 +150,7 @@ $alertesCompte   = $dashboardRepo->getAlertesCompte();
                     <h3 class="text-[11px] font-bold text-slate-800 mb-3.5 uppercase tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-square-plus text-teal-500"></i> US 1.1 : Entrée Produit
                     </h3>
+                    
                     <?php if (isset($_GET['error_empty']) || isset($_SESSION['error_message'])): ?>
                         <div class="bg-rose-50 border border-rose-200 text-rose-700 px-4 py-2.5 rounded-md mb-4 flex items-center gap-2 text-[11px] font-medium">
                             <i class="fa-solid fa-circle-exclamation text-rose-500 text-xs"></i>
@@ -169,10 +166,10 @@ $alertesCompte   = $dashboardRepo->getAlertesCompte();
                     <?php if (isset($_GET['status']) && $_GET['status'] === 'success'): ?>
                         <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-2.5 rounded-md mb-4 flex items-center gap-2 text-[11px] font-medium">
                             <i class="fa-solid fa-circle-check text-emerald-500 text-xs"></i>
-                            <span><?php echo $_SESSION['success_message'] ?? "Product successfully accepted!";
-                                    unset($_SESSION['success_message']); ?></span>
+                            <span><?php echo $_SESSION['success_message'] ?? "Product successfully accepted!"; unset($_SESSION['success_message']); ?></span>
                         </div>
                     <?php endif; ?>
+
                     <form action="/Pharmafefo-/src/controller/MedicalController.php" method="POST" class="space-y-3" onsubmit="return validateFEFOForm(event)">
                         <div>
                             <label class="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Médicament</label>
@@ -230,30 +227,46 @@ $alertesCompte   = $dashboardRepo->getAlertesCompte();
                             ?>
 
                             <?php if (!empty($prod) && is_array($prod)): ?>
-                                <div class="bg-slate-950 text-slate-300 p-3.5 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 border border-slate-900 shadow-xs">
-                                    <div class="space-y-0.5">
-                                        <span class="text-[9px] uppercase font-bold tracking-wider text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded-xs border border-amber-400/10">
-                                            Lot Prioritaire Détecté (À Sortir d'abord)
-                                        </span>
+                                <form action="../../../src/controller/process_sortie.php" method="post" class="block space-y-4">
+                                    <input type="hidden" name="lot_number" value="<?php echo htmlspecialchars($prod['lot_number']); ?>">
 
-                                        <h4 class="text-[13px] font-semibold text-white mt-1">
-                                            <?php echo htmlspecialchars($prod['product_name']); ?>
-                                        </h4>
+                                    <div class="bg-slate-950 text-slate-300 p-3.5 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 border border-slate-900 shadow-xs">
+                                        <div class="space-y-0.5">
+                                            <span class="text-[9px] uppercase font-bold tracking-wider text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded-xs border border-amber-400/10">
+                                                Lot Prioritaire Détecté (À Sortir d'abord)
+                                            </span>
 
-                                        <div class="flex items-center gap-3 text-[11px] text-slate-400">
-                                            <span>Lot: <b class="font-medium text-slate-200"><?php echo htmlspecialchars($prod['lot_number']); ?></b></span>
-                                            <span>Expire le: <b class="font-medium text-rose-400"><?php echo date('d/m/Y', strtotime($prod['expiration_date'])); ?></b></span>
-                                            <span>Quantité: <b class="font-medium text-sky-400"><?php echo $prod['quantity']; ?> u</b></span>
+                                            <h4 class="text-[13px] font-semibold text-white mt-1">
+                                                <?php echo htmlspecialchars($prod['product_name']); ?>
+                                            </h4>
+
+                                            <div class="flex items-center gap-3 text-[11px] text-slate-400">
+                                                <span>Lot: <b class="font-medium text-slate-200"><?php echo htmlspecialchars($prod['lot_number']); ?></b></span>
+                                                <span>Expire le: <b class="font-medium text-rose-400"><?php echo date('d/m/Y', strtotime($prod['expiration_date'])); ?></b></span>
+                                                <span>Quantité: <b class="font-medium text-sky-400"><?php echo $prod['quantity']; ?> u</b></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="bg-slate-900/60 p-1.5 px-3 rounded-md border border-slate-800/80 text-center min-w-24">
+                                            <span class="text-[9px] text-slate-500 block uppercase font-medium tracking-wider">Emplacement</span>
+                                            <span class="text-[12px] font-semibold text-teal-400">
+                                                <?php echo htmlspecialchars($prod['Emplacement'] ?? 'Non spécifié'); ?>
+                                            </span>
                                         </div>
                                     </div>
 
-                                    <div class="bg-slate-900/60 p-1.5 px-3 rounded-md border border-slate-800/80 text-center min-w-24">
-                                        <span class="text-[9px] text-slate-500 block uppercase font-medium tracking-wider">Emplacement</span>
-                                        <span class="text-[12px] font-semibold text-teal-400">
-                                            <?php echo htmlspecialchars($prod['Emplacement'] ?? 'Non spécifié'); ?>
-                                        </span>
+                                    <div class="flex justify-end mt-4">
+                                        <?php if ($prod['quantity'] > 0): ?>
+                                            <button type="submit" name="confirmer_sortie" class="bg-sky-600 hover:bg-sky-700 text-white font-medium py-1.5 px-3 rounded-md transition text-[11px] flex items-center gap-1.5 cursor-pointer shadow-xs">
+                                                <i class="fa-solid fa-check text-[10px]"></i> Confirmer la sortie
+                                            </button>
+                                        <?php else: ?>
+                                            <button type="button" disabled class="bg-slate-800 text-slate-500 font-medium py-1.5 px-3 rounded-md text-[11px] flex items-center gap-1.5 cursor-not-allowed">
+                                                <i class="fa-solid fa-ban text-[10px]"></i> Rupture de stock
+                                            </button>
+                                        <?php endif; ?>
                                     </div>
-                                </div>
+                                </form>
 
                             <?php else: ?>
                                 <div class="bg-slate-950 text-slate-400 p-4 rounded-lg border border-slate-900 text-center text-[11px] italic">
@@ -267,13 +280,8 @@ $alertesCompte   = $dashboardRepo->getAlertesCompte();
                             ?>
                         </div>
                     </div>
-
-                    <div class="flex justify-end mt-4">
-                        <button class="bg-sky-600 hover:bg-sky-700 text-white font-medium py-1.5 px-3 rounded-md transition text-[11px] flex items-center gap-1.5 cursor-pointer shadow-xs">
-                            <i class="fa-solid fa-check text-[10px]"></i> Confirmer la sortie
-                        </button>
-                    </div>
                 </div>
+
             </div>
 
             <div class="bg-white p-4 rounded-lg border border-slate-100 shadow-sm">
@@ -284,15 +292,15 @@ $alertesCompte   = $dashboardRepo->getAlertesCompte();
                     <span class="text-[10px] text-slate-400 italic">Trié automatiquement par ordre critique d'expiration</span>
                 </div>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
+                <div class="w-full overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[650px]">
                         <thead>
                             <tr class="border-b border-slate-100 text-slate-400 text-[10px] uppercase tracking-wider bg-slate-50/50">
                                 <th class="p-2 font-semibold">Médicament</th>
                                 <th class="p-2 font-semibold">N° Lot</th>
                                 <th class="p-2 font-semibold">Emplacement</th>
                                 <th class="p-2 font-semibold">DLU (Expiration)</th>
-                                <th class="p-2 font-semibold">Statut FEFO</th>
+                                <th class="p-2 font-semibold text-right">Statut FEFO</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-50 text-[11px]">
@@ -301,7 +309,8 @@ $alertesCompte   = $dashboardRepo->getAlertesCompte();
                                     $today_date = new DateTime();
                                     $expire_date = new DateTime($user['expiration_date']);
                                     $interval = $today_date->diff($expire_date);
-                                    $days_left = $interval->format('%r%a');
+                                    $days_left = (int)$interval->format('%r%a');
+                                    
                                     if ($days_left <= 30) {
                                         $status_text = "Priorité 1 (Urgent)";
                                         $badge_class = "bg-rose-50 text-rose-700 border border-rose-100";
@@ -320,15 +329,15 @@ $alertesCompte   = $dashboardRepo->getAlertesCompte();
                                         <td class="p-2 font-medium text-slate-800"><?php echo htmlspecialchars($user['product_name']); ?></td>
                                         <td class="p-2 text-slate-500 font-mono"><?php echo htmlspecialchars($user['lot_number']); ?></td>
                                         <td class="p-2">
-                                            <span class="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded-sm font-medium">
+                                            <span class="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded-sm font-medium text-[10px]">
                                                 <?php echo htmlspecialchars($user['Emplacement'] ?? 'Non spécifié'); ?>
                                             </span>
                                         </td>
                                         <td class="p-2 <?php echo $date_class; ?>">
                                             <?php echo date('d/m/Y', strtotime($user['expiration_date'])); ?>
                                         </td>
-                                        <td class="p-2">
-                                            <span class="<?php echo $badge_class; ?> px-2 py-0.5 rounded-sm font-bold text-[9px] uppercase">
+                                        <td class="p-2 text-right">
+                                            <span class="<?php echo $badge_class; ?> px-2 py-0.5 rounded-sm font-medium text-[9px] uppercase tracking-wider inline-block">
                                                 <?php echo $status_text; ?>
                                             </span>
                                         </td>
@@ -350,7 +359,6 @@ $alertesCompte   = $dashboardRepo->getAlertesCompte();
     </main>
 
     <script>
-        // Bloquer la sélection des dates passées directement sur l'input HTML5
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('dlu_input').min = today;
 

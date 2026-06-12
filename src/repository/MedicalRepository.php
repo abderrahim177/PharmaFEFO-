@@ -125,4 +125,21 @@ public function deleteProductById($productId) {
         return false;
     }
 }
+public function decrementLotQuantity(string $lotNumber): bool
+{
+    try {
+        $query = "UPDATE lots 
+                  SET quantity = quantity - 1 
+                  WHERE lot_number = :lot_number 
+                  AND quantity > 0";
+                  
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['lot_number' => $lotNumber]);
+
+        return $stmt->rowCount() > 0;
+    } catch (PDOException $e) {
+        error_log("Erreur decrementLotQuantity: " . $e->getMessage());
+        return false;
+    }
+}
 }
