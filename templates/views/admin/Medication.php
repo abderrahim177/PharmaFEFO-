@@ -203,7 +203,7 @@ $current_page = basename($_SERVER['SCRIPT_NAME']);
             <div class="space-y-1">
                 <h3 class="text-xs font-semibold text-slate-800 uppercase tracking-wider">Supprimer le produit ?</h3>
                 <p class="text-[11px] text-slate-400 leading-normal">
-                    Êtes-vous sûr de vouloir supprimer <span id="delete_product_name" class="font-semibold text-slate-700"></span> du catalogue ? Cette action است irréversible.
+                    Êtes-vous sûr de vouloir supprimer <span id="delete_product_name" class="font-semibold text-slate-700"></span> du catalogue ? Cette action irréversible.
                 </p>
             </div>
         </div>

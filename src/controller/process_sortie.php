@@ -2,7 +2,6 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
 require_once __DIR__ . '/../../config/database.php';
 require_once __DIR__ . '/../repository/MedicalRepository.php';
 if (isset($_POST['confirmer_sortie']) && !empty($_POST['lot_number'])) {

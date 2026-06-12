@@ -39,14 +39,12 @@ class Login {
                 $stmt = $this->pdo->prepare($query);
                 $stmt->execute(['email' => $email]);
                 $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
                 if ($user && password_verify($password, $user['password'])) {
                     
                     if (trim(strtolower($user['status'])) !== 'actif') {
                         header('Location: ../../templates/views/login.php?error=account_inactive');
                         exit();
                     }
-
                     $_SESSION['user_id']   = $user['id'];
                     $_SESSION['user_name'] = $user['name'];
                     $_SESSION['role']      = trim($user['role']); 
@@ -54,7 +52,7 @@ class Login {
                     $userRole = strtolower(trim($user['role']));
 
                     switch ($userRole) {
-                        case 'admin':                       
+                        case 'administrateur':                       
                             header('Location: ../../templates/views/admin/dashboard.php');
                             break;
                             

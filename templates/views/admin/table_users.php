@@ -236,7 +236,6 @@ $current_page = basename($_SERVER['SCRIPT_NAME']);
                         <select name="role" class="w-full px-2 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-indigo-500 text-[11px] bg-slate-50/30 transition">
                             <option value="Preparateur">Préparateur</option>
                             <option value="Pharmacien">Pharmacien</option>
-                            <option value="Administrateur">Administrateur</option>
                         </select>
                     </div>
                     <div>
