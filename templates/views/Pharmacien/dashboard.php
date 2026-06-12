@@ -8,6 +8,7 @@ $dbInstance = new Database();
 $pdo = $dbInstance->getConnection(); 
 $repository = new TotalLots($pdo);
 $criticiteStats = $repository->getLotsCriticiteStats();
+$Stocks = $repository->getStockProducts();
 ?>
 
 <!DOCTYPE html>
@@ -80,21 +81,21 @@ $criticiteStats = $repository->getLotsCriticiteStats();
                         <p class="text-[10px] font-medium uppercase tracking-wider text-slate-400">Alerte Rouge (&lt; 30j)</p>
                         <p class="text-xl font-semibold mt-0.5 text-slate-800"><?php echo $criticiteStats['total_rouge']; ?> Lots</p>
                     </div>
-                    <span class="text-[10px] bg-rose-50 text-rose-700 px-2 py-0.5 rounded-md font-medium border border-rose-100/50">Action requise</span>
+                    <span class="text-[10px] bg-rose-50 text-rose-700 px-2 py-0.5 rounded-md font-medium border border-rose-100/50 hover:cursor-pointer">Action requise</span>
                 </div>
                 <div class="bg-white p-4 rounded-xl border-l-2 border-amber-500 shadow-3xs flex items-center justify-between">
                     <div>
                         <p class="text-[10px] font-medium uppercase tracking-wider text-slate-400">Alerte Orange (&lt; 90j)</p>
                         <p class="text-xl font-semibold mt-0.5 text-slate-800"><?php echo $criticiteStats['total_orange']; ?> Lots</p>
                     </div>
-                    <span class="text-[10px] bg-amber-50 text-amber-700 px-2 py-0.5 rounded-md font-medium border border-amber-100/50">À déstocker</span>
+                    <span class="text-[10px] bg-amber-50 text-amber-700 px-2 py-0.5 rounded-md font-medium border border-amber-100/50 hover:cursor-pointer">À déstocker</span>
                 </div>
                 <div class="bg-white p-4 rounded-xl border-l-2 border-emerald-500 shadow-3xs flex items-center justify-between">
                     <div>
                         <p class="text-[10px] font-medium uppercase tracking-wider text-slate-400">Sécurité Vert (&gt; 6m)</p>
                         <p class="text-xl font-semibold mt-0.5 text-slate-800"><?php echo $criticiteStats['total_vert']; ?> Lots
                     </div>
-                    <span class="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-md font-medium border border-emerald-100/50">Conforme</span>
+                    <span class="text-[10px] bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-md font-medium border border-emerald-100/50 hover:cursor-pointer">Conforme</span>
                 </div>
             </div>
 
@@ -124,39 +125,96 @@ $criticiteStats = $repository->getLotsCriticiteStats();
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-100 text-xs text-slate-600">
-                            <tr class="hover:bg-slate-50/40 transition">
-                                <td class="py-2.5 px-4 font-medium text-slate-700">Amoxicilline Sandoz 500mg</td>
-                                <td class="py-2.5 px-4 font-mono text-[11px] text-slate-500">AMZ-2024-B8</td>
-                                <td class="py-2.5 px-4 text-rose-600 font-medium">01/06/2026 (Dépassée)</td>
-                                <td class="py-2.5 px-4">
-                                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] bg-rose-50 text-rose-700 font-medium border border-rose-100/50">
-                                        Alerte Rouge
-                                    </span>
-                                </td>
-                                <td class="py-2.5 px-4 text-slate-500">14 boîtes</td>
-                                <td class="py-2.5 px-4 text-right">
-                                    <button class="bg-rose-50 text-rose-700 hover:bg-rose-600 hover:text-white px-2 py-1 rounded-md text-[11px] font-medium transition border border-rose-100/80 cursor-pointer">
-                                        Retirer (Status::EXPIRED)
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-slate-50/40 transition">
-                                <td class="py-2.5 px-4 font-medium text-slate-700">Kardegic 75mg</td>
-                                <td class="py-2.5 px-4 font-mono text-[11px] text-slate-500">KARD-882-Z</td>
-                                <td class="py-2.5 px-4 text-amber-600 font-medium">15/08/2026</td>
-                                <td class="py-2.5 px-4">
-                                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] bg-amber-50 text-amber-700 font-medium border border-amber-100/50">
-                                        Alerte Orange
-                                    </span>
-                                </td>
-                                <td class="py-2.5 px-4 text-slate-500">120 boîtes</td>
-                                <td class="py-2.5 px-4 text-right">
-                                    <button class="text-slate-600 hover:bg-slate-100 px-2 py-1 rounded-md text-[11px] font-medium transition border border-slate-200 cursor-pointer">
-                                        Retour Fournisseur
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
+    <?php 
+    if (!empty($Stocks)): 
+        $today = new DateTime();
+        
+        foreach ($Stocks as $stock): 
+            $expiryDate = new DateTime($stock['expiration_date']);
+            $interval = $today->diff($expiryDate);
+            $daysLeft = $interval->days;
+            
+            if ($interval->invert) {
+                $daysLeft = -$daysLeft; 
+            }
+            $dbStatus = isset($stock['status']) ? strtolower(trim($stock['status'])) : 'available';
+            if ($dbStatus === 'expired' || $dbStatus === 'retiré') {
+                $badgeText = "Retiré / Expiré";
+                $badgeClass = "bg-slate-100 text-slate-600 border-slate-200";
+                $dateClass = "text-slate-400 line-through";
+                $dateLabel = "";
+                $actionButton = '<span class="text-[11px] text-slate-400 italic">Lot Hors-Service</span>';
+
+            } elseif ($dbStatus === 'retour_pending' || $dbStatus === 'en retour') {
+                $badgeText = "En Retour Labo";
+                $badgeClass = "bg-blue-50 text-blue-700 border-blue-100/50";
+                $dateClass = "text-slate-500";
+                $dateLabel = "";
+                $actionButton = '<span class="text-[11px] text-blue-600 font-medium px-2 py-1"><i class="fa-solid fa-truck-ramp-box text-[9px]"></i> En cours...</span>';
+
+            } else {
+                if ($daysLeft <= 0) {
+                    $badgeText = "Alerte Rouge";
+                    $badgeClass = "bg-rose-50 text-rose-700 border-rose-100/50";
+                    $dateClass = "text-rose-600 font-medium";
+                    $dateLabel = " (Dépassée)";
+                    $actionButton = '<button class="bg-rose-50 text-rose-700 hover:bg-rose-600 hover:text-white px-2 py-1 rounded-md text-[11px] font-medium transition border border-rose-100/80 cursor-pointer">Retirer (Status::EXPIRED)</button>';
+                } elseif ($daysLeft <= 30) {
+                    $badgeText = "Alerte Rouge";
+                    $badgeClass = "bg-rose-50 text-rose-700 border-rose-100/50";
+                    $dateClass = "text-rose-600 font-medium";
+                    $dateLabel = " (< 30j)";
+                    $actionButton = '<button class="bg-rose-50 text-rose-700 hover:bg-rose-600 hover:text-white px-2 py-1 rounded-md text-[11px] font-medium transition border border-rose-100/80 cursor-pointer">Retirer (Urgent)</button>';
+                } elseif ($daysLeft <= 90) {
+                    $badgeText = "Alerte Orange";
+                    $badgeClass = "bg-amber-50 text-amber-700 border-amber-100/50";
+                    $dateClass = "text-amber-600 font-medium";
+                    $dateLabel = "";
+                    $actionButton = '<button class="text-slate-600 hover:bg-slate-100 px-2 py-1 rounded-md text-[11px] font-medium transition border border-slate-200 cursor-pointer">Retour Fournisseur</button>';
+                } else {
+                    $badgeText = "Sécurité Vert";
+                    $badgeClass = "bg-emerald-50 text-emerald-700 border-emerald-100/50";
+                    $dateClass = "text-slate-500";
+                    $dateLabel = "";
+                    $actionButton = '<span class="text-[11px] text-emerald-600 font-medium px-2 py-1"><i class="fa-solid fa-check text-[9px]"></i> Conforme</span>';
+                }
+            }
+            ?>
+            
+            <tr class="hover:bg-slate-50/40 transition">
+                <td class="py-2.5 px-4 font-medium text-slate-700">
+                    <?php echo htmlspecialchars($stock['product_name']); ?>
+                </td>
+                <td class="py-2.5 px-4 font-mono text-[11px] text-slate-500">
+                    <?php echo htmlspecialchars($stock['lot_number']); ?>
+                </td>
+                <td class="py-2.5 px-4 <?php echo $dateClass; ?>">
+                    <?php echo date('d/m/Y', strtotime($stock['expiration_date'])) . $dateLabel; ?>
+                </td>
+                <td class="py-2.5 px-4">
+                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[10px] font-medium border <?php echo $badgeClass; ?>">
+                        <?php echo $badgeText; ?>
+                    </span>
+                </td>
+                <td class="py-2.5 px-4 text-slate-500">
+                    <?php echo intval($stock['quantity']); ?> boîtes
+                </td>
+                <td class="py-2.5 px-4 text-right">
+                    <?php echo $actionButton; ?>
+                </td>
+            </tr>
+
+        <?php 
+        endforeach; 
+    else: 
+    ?>
+        <tr>
+            <td colspan="6" class="py-6 text-center text-slate-400 italic">
+                Aucun lot disponible dans le stock actuellement.
+            </td>
+        </tr>
+    <?php endif; ?>
+</tbody>
                     </table>
                 </div>
             </div>

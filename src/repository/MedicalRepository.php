@@ -20,7 +20,7 @@ class ProductRepository{
         ]);
 
         $productId = $this->pdo->lastInsertId();
-        $queryLot = 'INSERT INTO lots (product_id, lot_number, expiration_date, quantity, status, created_at) 
+        $queryLot = 'INSERT INTO lots(product_id, lot_number, expiration_date, quantity, status, created_at) 
                      VALUES (:product_id, :lot_number, :expiration_date, :quantity, :status, NOW())';
         
         $stmtLot = $this->pdo->prepare($queryLot);

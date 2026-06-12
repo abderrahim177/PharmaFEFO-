@@ -27,4 +27,22 @@ class TotalLots{
         ];
     }
 }
+    public function getStockProducts() : array
+{
+    try {
+        $query = 'SELECT p.name AS product_name, l.lot_number, l.expiration_date, l.quantity 
+                  FROM products p
+                  INNER JOIN lots l ON p.id = l.product_id
+                  ORDER BY l.expiration_date ASC'; 
+
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    } catch (PDOException $e) {
+        error_log("Erreur Stockproduct: " . $e->getMessage());
+        return []; 
+    }
+}
 }
