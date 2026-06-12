@@ -51,9 +51,9 @@ $userInitials = getInitials($name);
     </style>
 </head>
 
-<body class="bg-slate-50 text-slate-600 flex h-screen overflow-hidden text-xs">
+<body class="bg-teal-600 text-slate-600 flex h-screen overflow-hidden text-xs">
 
-    <aside class="w-60 bg-slate-900 text-slate-400 flex flex-col justify-between hidden md:flex border-r border-slate-800 shrink-0">
+    <aside class="w-60 bg-teal-900 text-slate-400 flex flex-col justify-between hidden md:flex border-r border-slate-800 shrink-0">
         <div>
             <div class="flex items-center gap-2.5 px-5 py-4 border-b border-slate-800/60">
                 <div class="w-7 h-7 bg-emerald-600 rounded-lg flex items-center justify-center text-white shadow-xs">
