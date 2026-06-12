@@ -30,4 +30,44 @@ class globaleStatics{
         return ['valeur_perdue' => 0, 'boites_detruites' => 0, 'efficacite_fefo' => 100];
     }
 }
+public function getEntreesCeJour(): int
+    {
+        try {
+            $query = "SELECT COUNT(*) as total FROM lots WHERE DATE(created_at) = CURRENT_DATE";
+            $stmt = $this->pdo->query($query);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            return $row ? (int)$row['total'] : 0;
+        } catch (PDOException $e) {
+            error_log("Erreur getEntreesCeJour: " . $e->getMessage());
+            return 0;
+        }
+    }
+    public function getDispensationsTotal(): int
+    {
+        try {
+            // كتحسب مجموع الكميات من جدول الـ lots
+            $query = "SELECT SUM(quantity) as total FROM lots";
+            $stmt = $this->pdo->query($query);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            return $row && $row['total'] ? (int)$row['total'] : 0;
+        } catch (PDOException $e) {
+            error_log("Erreur getDispensationsTotal: " . $e->getMessage());
+            return 0;
+        }
+    }
+    public function getAlertesCompte(): int
+    {
+        try {
+            $query = "SELECT COUNT(*) as total FROM notifications WHERE is_read = 0";
+            $stmt = $this->pdo->query($query);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            return $row ? (int)$row['total'] : 0;
+        } catch (PDOException $e) {
+            error_log("Erreur getAlertesCompte: " . $e->getMessage());
+            return 0;
+        }
+    }
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -6,10 +6,11 @@ if (session_status() === PHP_SESSION_NONE) {
 $name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Utilisateur';
 $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'Inconnu';
 
-function getInitials($fullName) {
+function getInitials($fullName)
+{
     $words = explode(' ', trim($fullName));
     $initials = '';
-    
+
     foreach ($words as $word) {
         if (!empty($word)) {
             $initials .= mb_substr($word, 0, 1, 'UTF-8');
@@ -18,20 +19,25 @@ function getInitials($fullName) {
     return mb_strtoupper(mb_substr($initials, 0, 2, 'UTF-8'), 'UTF-8');
 }
 $userInitials = getInitials($name);
-require_once __DIR__ . "/../../../config/database.php"; 
-require_once __DIR__ . "/../../../src/repository/MedicalRepository.php"; 
-
+require_once __DIR__ . "/../../../config/database.php";
+require_once __DIR__ . "/../../../src/repository/MedicalRepository.php";
+require_once __DIR__ . "/../../../src/repository/DashboardRepository.php";
 // 2. Instanciation dial l-BDD u l-Repository
-$dbInstance = new Database(); 
-$pdo = $dbInstance->getConnection(); 
-$repository = new ProductRepository($pdo); 
-
+$dbInstance = new Database();
+$pdo = $dbInstance->getConnection();
+$repository = new ProductRepository($pdo);
+$dashboardRepo = new globaleStatics($pdo);
 $Allusers = $repository->GetAllProducts();
 
 $product_results = isset($_SESSION['fefo_results']) ? $_SESSION['fefo_results'] : [];
+// code des cards
+$lotsCeJour      = $dashboardRepo->getEntreesCeJour();
+$dispensations   = $dashboardRepo->getDispensationsTotal();
+$alertesCompte   = $dashboardRepo->getAlertesCompte();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -103,27 +109,43 @@ $product_results = isset($_SESSION['fefo_results']) ? $_SESSION['fefo_results'] 
         <div class="p-5 space-y-4 max-w-7xl w-full mx-auto">
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
                 <div class="bg-white p-4 rounded-lg border border-slate-100 shadow-sm flex items-center justify-between">
                     <div>
-                        <p class="text-[10px] text-slate-400 font-semibold tracking-wider uppercase">Entrées ce jour</p>
-                        <p class="text-base font-bold mt-0.5 text-slate-800">42 Lots</p>
+                        <p class="text-[10px] text-slate-400 font-bold tracking-wider uppercase">Entrées ce jour</p>
+                        <p class="text-base font-semibold mt-0.5 text-slate-800">
+                            <?php echo (int)$lotsCeJour; ?> Lot(s)
+                        </p>
                     </div>
-                    <div class="w-8 h-8 bg-teal-50 text-teal-600 border border-teal-100/40 rounded-md flex items-center justify-center text-xs"><i class="fa-solid fa-circle-plus"></i></div>
+                    <div class="w-8 h-8 bg-teal-50 text-teal-600 border border-teal-100/40 rounded-md flex items-center justify-center text-xs">
+                        <i class="fa-solid fa-circle-plus"></i>
+                    </div>
                 </div>
+
                 <div class="bg-white p-4 rounded-lg border border-slate-100 shadow-sm flex items-center justify-between">
                     <div>
-                        <p class="text-[10px] text-slate-400 font-semibold tracking-wider uppercase">Dispensations (FEFO)</p>
-                        <p class="text-base font-bold mt-0.5 text-slate-800">118 Boîtes</p>
+                        <p class="text-[10px] text-slate-400 font-bold tracking-wider uppercase">Dispensations (FEFO)</p>
+                        <p class="text-base font-semibold mt-0.5 text-slate-800">
+                            <?php echo (int)$dispensations; ?> Boîte(s)
+                        </p>
                     </div>
-                    <div class="w-8 h-8 bg-sky-50 text-sky-600 border border-sky-100/40 rounded-md flex items-center justify-center text-xs"><i class="fa-solid fa-prescription-bottle-medical"></i></div>
+                    <div class="w-8 h-8 bg-sky-50 text-sky-600 border border-sky-100/40 rounded-md flex items-center justify-center text-xs">
+                        <i class="fa-solid fa-prescription-bottle-medical"></i>
+                    </div>
                 </div>
+
                 <div class="bg-white p-4 rounded-lg border border-slate-100 shadow-sm flex items-center justify-between">
                     <div>
-                        <p class="text-[10px] text-slate-400 font-semibold tracking-wider uppercase">Alertes à traiter</p>
-                        <p class="text-base font-bold mt-0.5 text-rose-600">3 Produits</p>
+                        <p class="text-[10px] text-slate-400 font-bold tracking-wider uppercase">Alertes à traiter</p>
+                        <p class="text-base font-semibold mt-0.5 text-rose-600">
+                            <?php echo (int)$alertesCompte; ?> Produit(s)
+                        </p>
                     </div>
-                    <div class="w-8 h-8 bg-rose-50 text-rose-600 border border-rose-100/40 rounded-md flex items-center justify-center text-xs"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                    <div class="w-8 h-8 bg-rose-50 text-rose-600 border border-rose-100/40 rounded-md flex items-center justify-center text-xs">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
                 </div>
+
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -148,7 +170,7 @@ $product_results = isset($_SESSION['fefo_results']) ? $_SESSION['fefo_results'] 
                         <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-2.5 rounded-md mb-4 flex items-center gap-2 text-[11px] font-medium">
                             <i class="fa-solid fa-circle-check text-emerald-500 text-xs"></i>
                             <span><?php echo $_SESSION['success_message'] ?? "Product successfully accepted!";
-                            unset($_SESSION['success_message']); ?></span>
+                                    unset($_SESSION['success_message']); ?></span>
                         </div>
                     <?php endif; ?>
                     <form action="/Pharmafefo-/src/controller/MedicalController.php" method="POST" class="space-y-3" onsubmit="return validateFEFOForm(event)">
@@ -190,59 +212,59 @@ $product_results = isset($_SESSION['fefo_results']) ? $_SESSION['fefo_results'] 
                         <p class="text-[11px] text-slate-400 mb-3">Saisissez le médicament demandé pour cibler automatiquement le lot prioritaire.</p>
 
                         <form action="/Pharmafefo-/src/controller/MedicalController.php" method="post" class="space-y-4">
-    <input type="hidden" name="action" value="search_classic">
-    
-    <div class="relative">
-        <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-400 text-[10px]"></i>
-        <input type="text" name="query" value="<?php echo isset($_SESSION['last_search']) ? htmlspecialchars($_SESSION['last_search']) : ''; ?>" placeholder="Saisissez le médicament demandé (Ex: Doliprane)..." class="w-full pl-7 pr-20 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-sky-500 text-[11px] font-medium bg-slate-50/40 transition">
-        <button type="submit" class="absolute right-1 top-1 bottom-1 bg-sky-600 hover:bg-sky-700 text-white px-3 rounded-md text-[10px] font-medium transition">
-            Chercher
-        </button>
-    </div>
-</form>
+                            <input type="hidden" name="action" value="search_classic">
+
+                            <div class="relative">
+                                <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-400 text-[10px]"></i>
+                                <input type="text" name="query" value="<?php echo isset($_SESSION['last_search']) ? htmlspecialchars($_SESSION['last_search']) : ''; ?>" placeholder="Saisissez le médicament demandé (Ex: Doliprane)..." class="w-full pl-7 pr-20 py-1.5 border border-slate-200 rounded-md focus:outline-hidden focus:border-sky-500 text-[11px] font-medium bg-slate-50/40 transition">
+                                <button type="submit" class="absolute right-1 top-1 bottom-1 bg-sky-600 hover:bg-sky-700 text-white px-3 rounded-md text-[10px] font-medium transition">
+                                    Chercher
+                                </button>
+                            </div>
+                        </form>
 
                         <div class="space-y-3 mt-4">
-                            <?php 
-$prod = $_SESSION['fefo_results'] ?? null; 
-$search_error = $_SESSION['fefo_search_error'] ?? null;
-?>
+                            <?php
+                            $prod = $_SESSION['fefo_results'] ?? null;
+                            $search_error = $_SESSION['fefo_search_error'] ?? null;
+                            ?>
 
-<?php if (!empty($prod) && is_array($prod)): ?>
-    <div class="bg-slate-950 text-slate-300 p-3.5 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 border border-slate-900 shadow-xs">
-        <div class="space-y-0.5">
-            <span class="text-[9px] uppercase font-bold tracking-wider text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded-xs border border-amber-400/10">
-                Lot Prioritaire Détecté (À Sortir d'abord)
-            </span>
-            
-            <h4 class="text-[13px] font-semibold text-white mt-1">
-                <?php echo htmlspecialchars($prod['product_name']); ?>
-            </h4>
-            
-            <div class="flex items-center gap-3 text-[11px] text-slate-400">
-                <span>Lot: <b class="font-medium text-slate-200"><?php echo htmlspecialchars($prod['lot_number']); ?></b></span>
-                <span>Expire le: <b class="font-medium text-rose-400"><?php echo date('d/m/Y', strtotime($prod['expiration_date'])); ?></b></span>
-                <span>Quantité: <b class="font-medium text-sky-400"><?php echo $prod['quantity']; ?> u</b></span>
-            </div>
-        </div>
-        
-        <div class="bg-slate-900/60 p-1.5 px-3 rounded-md border border-slate-800/80 text-center min-w-24">
-            <span class="text-[9px] text-slate-500 block uppercase font-medium tracking-wider">Emplacement</span>
-            <span class="text-[12px] font-semibold text-teal-400">
-                <?php echo htmlspecialchars($prod['Emplacement'] ?? 'Non spécifié'); ?>
-            </span>
-        </div>
-    </div>
+                            <?php if (!empty($prod) && is_array($prod)): ?>
+                                <div class="bg-slate-950 text-slate-300 p-3.5 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 border border-slate-900 shadow-xs">
+                                    <div class="space-y-0.5">
+                                        <span class="text-[9px] uppercase font-bold tracking-wider text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded-xs border border-amber-400/10">
+                                            Lot Prioritaire Détecté (À Sortir d'abord)
+                                        </span>
 
-<?php else: ?>
-    <div class="bg-slate-950 text-slate-400 p-4 rounded-lg border border-slate-900 text-center text-[11px] italic">
-        <?php echo $search_error ?? "Veuillez chercher un médicament pour afficher ses lots..."; ?>
-    </div>
-<?php 
-endif; 
+                                        <h4 class="text-[13px] font-semibold text-white mt-1">
+                                            <?php echo htmlspecialchars($prod['product_name']); ?>
+                                        </h4>
 
-unset($_SESSION['fefo_results']);
-unset($_SESSION['fefo_search_error']);
-?>
+                                        <div class="flex items-center gap-3 text-[11px] text-slate-400">
+                                            <span>Lot: <b class="font-medium text-slate-200"><?php echo htmlspecialchars($prod['lot_number']); ?></b></span>
+                                            <span>Expire le: <b class="font-medium text-rose-400"><?php echo date('d/m/Y', strtotime($prod['expiration_date'])); ?></b></span>
+                                            <span>Quantité: <b class="font-medium text-sky-400"><?php echo $prod['quantity']; ?> u</b></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="bg-slate-900/60 p-1.5 px-3 rounded-md border border-slate-800/80 text-center min-w-24">
+                                        <span class="text-[9px] text-slate-500 block uppercase font-medium tracking-wider">Emplacement</span>
+                                        <span class="text-[12px] font-semibold text-teal-400">
+                                            <?php echo htmlspecialchars($prod['Emplacement'] ?? 'Non spécifié'); ?>
+                                        </span>
+                                    </div>
+                                </div>
+
+                            <?php else: ?>
+                                <div class="bg-slate-950 text-slate-400 p-4 rounded-lg border border-slate-900 text-center text-[11px] italic">
+                                    <?php echo $search_error ?? "Veuillez chercher un médicament pour afficher ses lots..."; ?>
+                                </div>
+                            <?php
+                            endif;
+
+                            unset($_SESSION['fefo_results']);
+                            unset($_SESSION['fefo_search_error']);
+                            ?>
                         </div>
                     </div>
 
@@ -275,11 +297,11 @@ unset($_SESSION['fefo_search_error']);
                         </thead>
                         <tbody class="divide-y divide-slate-50 text-[11px]">
                             <?php if (!empty($Allusers)): ?>
-                                <?php foreach ($Allusers as $user): 
+                                <?php foreach ($Allusers as $user):
                                     $today_date = new DateTime();
                                     $expire_date = new DateTime($user['expiration_date']);
                                     $interval = $today_date->diff($expire_date);
-                                    $days_left = $interval->format('%r%a'); 
+                                    $days_left = $interval->format('%r%a');
                                     if ($days_left <= 30) {
                                         $status_text = "Priorité 1 (Urgent)";
                                         $badge_class = "bg-rose-50 text-rose-700 border border-rose-100";
@@ -318,7 +340,7 @@ unset($_SESSION['fefo_search_error']);
                                         No products found in the FEFO queue.
                                     </td>
                                 </tr>
-                            <?php endif; ?> 
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
@@ -351,4 +373,5 @@ unset($_SESSION['fefo_search_error']);
         }
     </script>
 </body>
+
 </html>
