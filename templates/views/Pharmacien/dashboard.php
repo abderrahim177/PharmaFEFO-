@@ -90,7 +90,7 @@ try {
                     $notifCount = count($allNotifications);
                     if ($notifCount > 0):
                     ?>
-                        <span id="notif-count" class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[9px] font-medium text-white ring-2 ring-white animate-pulse">
+                        <span id="notif-count" class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[9px] font-medium text-white ring-2 ring-white ">
                             <?php echo $notifCount; ?>
                         </span>
                     <?php endif; ?>
@@ -103,7 +103,9 @@ try {
 
                         <?php if ($notifCount > 0): ?>
                             <button id="mark-all-read" class="text-[10px] text-teal-600 hover:text-teal-700 font-medium hover:underline cursor-pointer">
-                                Tout marquer comme lu
+                                <a href="../../../src/repository/mark_all_readRepository.php" class="text-[10px] text-teal-600 hover:text-teal-700 font-medium hover:underline cursor-pointer">
+                                    Tout marquer comme lu
+                                </a>
                             </button>
                         <?php else: ?>
                             <button id="mark-all-read" class="text-[10px] text-slate-300 cursor-not-allowed no-underline" disabled>
