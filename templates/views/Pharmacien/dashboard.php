@@ -66,12 +66,64 @@ $Stocks = $repository->getStockProducts();
     </aside>
 
     <main class="flex-1 flex flex-col overflow-y-auto">
-        <header class="bg-white border-b border-slate-200 h-14 flex items-center justify-between px-6 shrink-0">
-            <h1 class="text-[13px] font-medium text-slate-800">Supervision du Titulaire</h1>
-            <div class="bg-amber-50 text-amber-800 border border-amber-100/60 px-2.5 py-1 rounded-md text-[11px] font-medium flex items-center gap-1.5 shadow-2xs">
-                <i class="fa-solid fa-bell text-amber-600 text-[10px]"></i> 14 produits expirent le mois prochain
+        <header class="bg-white border-b border-slate-200 h-14 flex items-center justify-between px-6 shrink-0 relative">
+    <h1 class="text-[13px] font-medium text-slate-800">Supervision du Titulaire</h1>
+    
+    <div class="relative inline-block text-left" id="notification-wrapper">
+        
+        <button id="notif-btn" class="relative w-8 h-8 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-center text-slate-500 hover:text-slate-700 hover:bg-slate-100 hover:border-slate-300 transition cursor-pointer focus:outline-hidden">
+            <i class="fa-solid fa-bell text-xs"></i>
+            
+            <span id="notif-count" class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[9px] font-medium text-white ring-2 ring-white animate-pulse">
+                3
+            </span>
+        </button>
+
+        <div id="notif-dropdown" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-xl border border-slate-200/85 shadow-lg shrink-0 z-50 overflow-hidden transform origin-top-right transition-all">
+            
+            <div class="px-3.5 py-2.5 border-b border-slate-100 flex items-center justify-between bg-slate-50/60">
+                <span class="text-[11px] font-semibold text-slate-700 uppercase tracking-wider">Notifications</span>
+                <button id="mark-all-read" class="text-[10px] text-teal-600 hover:text-teal-700 font-medium hover:underline cursor-pointer">
+                    Tout marquer comme lu
+                </button>
             </div>
-        </header>
+
+            <div id="notif-list" class="max-h-60 overflow-y-auto divide-y divide-slate-100">
+                
+                <div class="p-3 hover:bg-slate-50/60 transition flex gap-2.5 items-start">
+                    <div class="w-2 h-2 rounded-full bg-rose-500 mt-1 shrink-0"></div>
+                    <div class="space-y-0.5">
+                        <p class="text-xs text-slate-700 font-medium leading-normal">14 produits expirent le mois prochain.</p>
+                        <p class="text-[10px] text-slate-400"><i class="fa-regular fa-clock text-[9px]"></i> Il y a 5 min</p>
+                    </div>
+                </div>
+
+                <div class="p-3 hover:bg-slate-50/60 transition flex gap-2.5 items-start">
+                    <div class="w-2 h-2 rounded-full bg-amber-500 mt-1 shrink-0"></div>
+                    <div class="space-y-0.5">
+                        <p class="text-xs text-slate-700 font-normal leading-normal">Lot <span class="font-mono text-[11px]">KARD-882-Z</span> approche de la zone orange.</p>
+                        <p class="text-[10px] text-slate-400"><i class="fa-regular fa-clock text-[9px]"></i> Il y a 1h</p>
+                    </div>
+                </div>
+
+                <div class="p-3 hover:bg-slate-50/60 transition flex gap-2.5 items-start">
+                    <div class="w-2 h-2 rounded-full bg-rose-500 mt-1 shrink-0"></div>
+                    <div class="space-y-0.5">
+                        <p class="text-xs text-slate-700 font-medium leading-normal">Amoxicilline Sandoz est dépassée (Alerte Rouge).</p>
+                        <p class="text-[10px] text-slate-400"><i class="fa-regular fa-clock text-[9px]"></i> Hier</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="border-t border-slate-100 p-2 text-center bg-slate-50/30">
+                <a href="#" class="block text-[10px] text-slate-400 hover:text-slate-600 font-medium transition">
+                    Voir toutes les alertes
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
 
         <div class="p-6 space-y-5 max-w-7xl w-full mx-auto">
             
@@ -221,5 +273,42 @@ $Stocks = $repository->getStockProducts();
 
         </div>
     </main>
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const notifBtn = document.getElementById('notif-btn');
+        const notifDropdown = document.getElementById('notif-dropdown');
+        const notifCount = document.getElementById('notif-count');
+        const notifList = document.getElementById('notif-list');
+        const markAllReadBtn = document.getElementById('mark-all-read');
+
+        notifBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            notifDropdown.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!notifDropdown.contains(e.target) && e.target !== notifBtn) {
+                notifDropdown.classList.add('hidden');
+            }
+        });
+
+        markAllReadBtn.addEventListener('click', () => {
+            if (notifCount) {
+                notifCount.style.display = 'none';
+            }
+            
+            notifList.innerHTML = `
+                <div class="p-6 text-center text-slate-400 italic flex flex-col items-center gap-1.5">
+                    <i class="fa-solid fa-bell-slash text-slate-300 text-sm"></i>
+                    <p class="text-[11px]">Aucune notification non lue</p>
+                </div>
+            `;
+            
+            markAllReadBtn.disabled = true;
+            markAllReadBtn.classList.remove('text-teal-600', 'hover:text-teal-700');
+            markAllReadBtn.classList.add('text-slate-300', 'cursor-not-allowed', 'no-underline');
+        });
+    });
+</script>
 </body>
 </html>
