@@ -89,4 +89,23 @@ class users {
         exit();
     }
 }
+public function getUsersCountByRole() : array 
+{
+    try {
+        $query = "SELECT role, COUNT(*) as total FROM users GROUP BY role";
+        $stmt = $this->pdo->query($query);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $counts = ['preparateur' => 0, 'pharmacien' => 0, 'admin' => 0];
+        foreach ($results as $row) {
+            $counts[$row['role']] = $row['total'];
+        }
+
+        return $counts;
+
+    } catch (PDOException $e) {
+        error_log("Erreur COUNT users: " . $e->getMessage());
+        return ['preparateur' => 0, 'pharmacien' => 0, 'admin' => 0];
+    }
+}
 }

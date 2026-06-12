@@ -1,13 +1,15 @@
 <?php
 require_once __DIR__ . "/../../../config/database.php";
 require_once __DIR__ . "/../../../src/repository/DashboardRepository.php";
-
+require_once __DIR__ . "/../../../src/repository/UserRepository.php";
 // 2. Instanciation dial l-BDD u l-Repository
 
 $dbInstance = new Database();
 $pdo = $dbInstance->getConnection();
 $repository = new globaleStatics($pdo);
+$repositorys = new users($pdo);
 $stats = $repository->getPertesStatsGlobal();
+$userCounts = $repositorys->getUsersCountByRole();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -148,59 +150,75 @@ $stats = $repository->getPertesStatsGlobal();
                 </div>
 
                 <!-- GRID ACCÈS ET CLAUDE BERNARD -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+               <div class="mt-[20px] grid grid-cols-1 lg:grid-cols-2 gap-5">
 
-                    <!-- ACCÈS ACTEURS -->
-                    <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-xs font-semibold text-slate-800 mb-3.5 flex items-center gap-1.5 uppercase tracking-wider">
-                                <i class="fa-solid fa-user-shield text-slate-400 text-xs"></i> Droits d'Accès Système
-                            </h3>
-                            <div class="space-y-2">
-                                <div class="p-2.5 border border-slate-100 rounded-lg flex items-center justify-between bg-slate-50/40">
-                                    <div>
-                                        <p class="text-xs font-medium text-slate-700">Préparateur / Gestionnaire</p>
-                                        <p class="text-[11px] text-slate-400">Réception, Scan Lot, Sorties FEFO</p>
-                                    </div>
-                                    <span class="text-[10px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded font-medium">Lecture/Écriture</span>
-                                </div>
-                                <div class="p-2.5 border border-slate-100 rounded-lg flex items-center justify-between bg-slate-50/40">
-                                    <div>
-                                        <p class="text-xs font-medium text-slate-700">Pharmacien / Biologiste</p>
-                                        <p class="text-[11px] text-slate-400">Validation, Retours, Configuration seuils</p>
-                                    </div>
-                                    <span class="text-[10px] text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded font-medium">Manager</span>
-                                </div>
-                            </div>
+    <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between">
+        <div>
+            <h3 class="text-xs font-semibold text-slate-800 mb-3.5 flex items-center gap-1.5 uppercase tracking-wider">
+                <i class="fa-solid fa-user-shield text-slate-400 text-xs"></i> Droits d'Accès Système
+            </h3>
+            
+            <div class="space-y-2">
+                <div class="p-2.5 border border-slate-100 rounded-lg flex items-center justify-between bg-slate-50/40">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <p class="text-xs font-medium text-slate-700">Préparateur / Gestionnaire</p>
+                            <span class="text-[10px] text-slate-500 bg-slate-200/60 px-1.5 py-0.2 rounded-full font-semibold">
+                                <?php echo $userCounts['preparateur']; ?> actif(s)
+                            </span>
                         </div>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Réception, Scan Lot, Sorties FEFO</p>
                     </div>
-
-                    <!-- INTEGRATION CLAUDE BERNARD -->
-                    <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between">
-                        <div>
-                            <h3 class="text-xs font-semibold text-slate-800 mb-1 flex items-center gap-1.5 uppercase tracking-wider">
-                                <i class="fa-solid fa-cloud-arrow-down text-indigo-500 text-xs"></i> Base Claude Bernard
-                            </h3>
-                            <p class="text-[11px] text-slate-400 mb-3.5">Synchronisation en arrière-plan des monographies et interactions médicamenteuses.</p>
-
-                            <div class="bg-slate-900 text-slate-300 font-mono text-[10px] p-2.5 rounded-lg border border-slate-800 flex items-center justify-between">
-                                <span>Status: API_SUCCESS_200</span>
-                                <span class="text-slate-500">Aujourd'hui à 04:00 AM</span>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-2 mt-4">
-                            <button class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-medium py-1.5 rounded-md transition shadow-xs cursor-pointer">
-                                Forcer Sync
-                            </button>
-                            <button class="border border-slate-200 text-slate-600 text-[11px] font-medium py-1.5 px-3 rounded-md hover:bg-slate-50 transition cursor-pointer">
-                                Logs API
-                            </button>
-                        </div>
-                    </div>
-
+                    <span class="text-[10px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded font-medium">Lecture/Écriture</span>
                 </div>
 
+                <div class="p-2.5 border border-slate-100 rounded-lg flex items-center justify-between bg-slate-50/40">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <p class="text-xs font-medium text-slate-700">Pharmacien / Biologiste</p>
+                            <span class="text-[10px] text-indigo-600 bg-indigo-100/60 px-1.5 py-0.2 rounded-full font-semibold">
+                                <?php echo $userCounts['pharmacien']; ?> actif(s)
+                            </span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Validation, Retours, Configuration seuils</p>
+                    </div>
+                    <span class="text-[10px] text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded font-medium">Manager</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-50">
+            <a href="./table_users.php" class="w-full inline-flex items-center justify-center gap-1.5 border border-slate-200 text-slate-600 hover:text-slate-800 hover:bg-slate-50 hover:border-slate-300 text-[11px] font-medium py-1.5 px-3 rounded-md transition cursor-pointer shadow-3xs">
+                <i class="fa-solid fa-users-gear text-[10px]"></i>
+                Gérer les comptes utilisateurs
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white p-5 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-between">
+        <div>
+            <h3 class="text-xs font-semibold text-slate-800 mb-1 flex items-center gap-1.5 uppercase tracking-wider">
+                <i class="fa-solid fa-cloud-arrow-down text-indigo-500 text-xs"></i> Base Claude Bernard
+            </h3>
+            <p class="text-[11px] text-slate-400 mb-3.5">Synchronisation en arrière-plan des monographies et interactions médicamenteuses.</p>
+
+            <div class="bg-slate-900 text-slate-300 font-mono text-[10px] p-2.5 rounded-lg border border-slate-800 flex items-center justify-between">
+                <span>Status: API_SUCCESS_200</span>
+                <span class="text-slate-500">Aujourd'hui à 04:00 AM</span>
+            </div>
+        </div>
+
+        <div class="flex gap-2 mt-4">
+            <button class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-medium py-1.5 rounded-md transition shadow-sm cursor-pointer">
+                Forcer Sync
+            </button>
+            <button class="border border-slate-200 text-slate-600 text-[11px] font-medium py-1.5 px-3 rounded-md hover:bg-slate-50 transition cursor-pointer">
+                Logs API
+            </button>
+        </div>
+    </div>
+
+</div>
             </div>
     </main>
 </body>
